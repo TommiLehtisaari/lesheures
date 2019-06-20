@@ -1,13 +1,12 @@
-const { ApolloServer, gql, PubSub } = require('apollo-server')
-const { AuthenticationError, UserInputError } = require('apollo-server')
+const { ApolloServer, PubSub } = require('apollo-server')
 
 const mongoose = require('mongoose')
 const config = require('config')
 const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
-const _ = require('lodash')
 
-const User = require('./models/userModel')
+const { User } = require('./src/models')
+const { typeDefs } = require('./src/typeDefs')
+const { resolvers } = require('./src/resolvers')
 
 const pubsub = new PubSub()
 
@@ -35,87 +34,6 @@ mongoose
   .catch(error => {
     console.log('error connection to MongoDB:', error.message)
   })
-
-const users = [
-  { id: 1, username: 'tommi', password: 'salainene' },
-  { id: 2, username: 'arto', password: 'salainene' },
-  { id: 3, username: 'matti', password: 'salainene' }
-]
-
-const typeDefs = gql`
-  type Query {
-    allUsers: User!
-  }
-
-  type Mutation {
-    createUser(username: String!, password: String!): Token
-    login(username: String!, password: String!): Token
-  }
-
-  type User {
-    username: String!
-    name: String!
-    password: String!
-    admin: Boolean!
-    id: ID!
-  }
-
-  type Token {
-    value: String!
-  }
-`
-
-const resolvers = {
-  Query: {
-    allUsers: () => users
-  },
-  Mutation: {
-    createUser: async (root, args) => {
-      const { username, password, name } = args
-
-      const saltRounds = 10
-      const hashPassword = await bcrypt.hash(password, saltRounds)
-
-      const user = new User({
-        username,
-        name,
-        password: hashPassword,
-        admin: false
-      })
-
-      try {
-        await user.save()
-        return {
-          value: jwt.sign(
-            _.pick(user, ['username', 'name', 'admin', 'id']),
-            config.get('jwt_secret')
-          )
-        }
-      } catch (error) {
-        throw new UserInputError(error.message, {
-          invalidArgs: args
-        })
-      }
-    },
-    login: async (root, args) => {
-      const { username, password } = args
-      const user = await User.findOne({ username })
-      if (!user) {
-        throw new UserInputError(`User with name of '${username}' not found`)
-      }
-
-      const validPassword = await bcrypt.compare(password, user.password)
-      if (!validPassword) throw new UserInputError(`Invalid password`)
-
-      return {
-        value: jwt.sign(
-          _.pick(user, ['username', 'name', 'admin', 'id']),
-          config.get('jwt_secret')
-        )
-      }
-    }
-  }
-}
 
 const server = new ApolloServer({
   typeDefs,
