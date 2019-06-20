@@ -8,13 +8,19 @@ const schema = new mongoose.Schema({
     unique: true,
     minlength: 3
   },
-  favouriteGenre: {
-    type: String
+  name: {
+    type: String,
+    required: true,
+    minlength: 3
   },
   password: {
     type: String,
     required: true,
     minlength: 5
+  },
+  admin: {
+    type: Boolean,
+    required: true
   }
 }).plugin(uniqueValidator)
 

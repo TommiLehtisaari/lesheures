@@ -4,6 +4,9 @@ const { AuthenticationError, UserInputError } = require('apollo-server')
 const mongoose = require('mongoose')
 const config = require('config')
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
+const _ = require('lodash')
+
 const User = require('./models/userModel')
 
 const pubsub = new PubSub()
@@ -34,9 +37,9 @@ mongoose
   })
 
 const users = [
-  { id: 1, name: 'tommi', password: 'salainene' },
-  { id: 2, name: 'arto', password: 'salainene' },
-  { id: 3, name: 'matti', password: 'salainene' }
+  { id: 1, username: 'tommi', password: 'salainene' },
+  { id: 2, username: 'arto', password: 'salainene' },
+  { id: 3, username: 'matti', password: 'salainene' }
 ]
 
 const typeDefs = gql`
@@ -44,16 +47,55 @@ const typeDefs = gql`
     allUsers: User!
   }
 
+  type Mutation {
+    createUser(username: String!, password: String!): Token
+  }
+
   type User {
+    username: String!
     name: String!
     password: String!
+    admin: Boolean!
     id: ID!
+  }
+
+  type Token {
+    value: String!
   }
 `
 
 const resolvers = {
   Query: {
     allUsers: () => users
+  },
+  Mutation: {
+    createUser: async (root, args) => {
+      const { username, password, name } = args
+
+      const saltRounds = 10
+      const hashPassword = await bcrypt.hash(password, saltRounds)
+
+      const user = new User({
+        username,
+        name,
+        password: hashPassword,
+        admin: false
+      })
+
+      try {
+        await user.save()
+        return {
+          value: jwt.sign(
+            _.pick(user, ['username', 'name', 'admin', 'id']),
+            config.get('jwt_secret')
+          )
+        }
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args
+        })
+      }
+    }
   }
 }
 
