@@ -18,7 +18,7 @@ const databaseDefiner = env => {
     case 'test':
       return config.get('db').toString()
     default:
-      return config.get('atlas_uri')
+      return config.get('atlas_uri').toString()
   }
 }
 
