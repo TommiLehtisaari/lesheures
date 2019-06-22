@@ -6,5 +6,6 @@ const Hourlog = require('./Hourlog')
 module.exports = {
   User,
   Project,
-  Task
+  Task,
+  Hourlog
 }

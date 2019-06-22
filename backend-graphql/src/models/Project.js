@@ -6,8 +6,8 @@ const schema = new mongoose.Schema({
     type: String,
     unique: true,
     required: true
-  }
-  // tasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }]
+  },
+  tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }]
 }).plugin(uniqueValidator)
 
 module.exports = mongoose.model('Project', schema)

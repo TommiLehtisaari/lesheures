@@ -10,7 +10,6 @@ const schema = new mongoose.Schema({
   },
   name: {
     type: String,
-    required: true,
     minlength: 3
   },
   password: {
@@ -21,7 +20,8 @@ const schema = new mongoose.Schema({
   admin: {
     type: Boolean,
     required: true
-  }
+  },
+  hourlogs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Hourlog' }]
 }).plugin(uniqueValidator)
 
 module.exports = mongoose.model('User', schema)

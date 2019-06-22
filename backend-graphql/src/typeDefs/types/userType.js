@@ -13,4 +13,5 @@ const userTypes = gql`
     value: String!
   }
 `
+
 module.exports = { userTypes }

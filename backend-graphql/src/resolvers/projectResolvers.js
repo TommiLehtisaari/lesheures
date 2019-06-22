@@ -17,6 +17,12 @@ const projectResolvers = {
         })
       }
     }
+  },
+  Project: {
+    tasks: async root => {
+      const project = await Project.findById(root.id).populate('tasks')
+      return project.tasks
+    }
   }
 }
 
