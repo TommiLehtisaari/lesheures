@@ -1,12 +1,17 @@
 const { Project } = require('../models')
-const { UserInputError } = require('apollo-server')
+const { UserInputError, ForbiddenError } = require('apollo-server')
 
 const projectResolvers = {
   Query: {
     allProjects: () => Project.find({})
   },
   Mutation: {
-    createProject: async (root, args) => {
+    createProject: async (root, args, { currentUser }) => {
+      if (!currentUser || !currentUser.admin) {
+        throw new ForbiddenError(
+          'Creating new Project requires Admin privileges.'
+        )
+      }
       const project = new Project({ name: args.name })
       try {
         await project.save()

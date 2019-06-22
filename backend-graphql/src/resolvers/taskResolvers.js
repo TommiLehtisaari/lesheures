@@ -1,9 +1,12 @@
 const { Task, Project } = require('../models')
-const { UserInputError } = require('apollo-server')
+const { UserInputError, ForbiddenError } = require('apollo-server')
 
 const taskResolvers = {
   Mutation: {
-    createTask: async (root, args) => {
+    createTask: async (root, args, { currentUser }) => {
+      if (!currentUser || !currentUser.admin) {
+        throw new ForbiddenError('Creating task requires Admin privileges.')
+      }
       const project = await Project.findById(args.projectId)
       if (!project) {
         throw new UserInputError(

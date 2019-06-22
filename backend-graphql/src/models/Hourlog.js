@@ -10,7 +10,7 @@ const schema = new mongoose.Schema({
     required: true
   },
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  task: { type: mongoose.Schema.Types.ObjectId, ref: 'Project', required: true }
+  task: { type: mongoose.Schema.Types.ObjectId, ref: 'Task', required: true }
 })
 
 module.exports = mongoose.model('Hourlog', schema)

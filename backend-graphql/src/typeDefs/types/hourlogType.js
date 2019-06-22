@@ -1,11 +1,13 @@
 const { gql } = require('apollo-server')
 
 const hourlogTypes = gql`
+  scalar Date
+
   type Hourlog {
     id: ID!
-    date: String!
+    date: Date!
     hours: Float!
-    user: User!
+    user: User
     task: Task!
   }
 `

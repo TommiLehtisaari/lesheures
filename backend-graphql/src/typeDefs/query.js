@@ -4,6 +4,7 @@ const query = gql`
   type Query {
     allUsers: User!
     allProjects: [Project!]
+    allHourlogs: [Hourlog]
   }
 `
 
