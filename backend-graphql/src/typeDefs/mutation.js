@@ -11,7 +11,8 @@ const mutation = gql`
     """
     createUser(username: String!, password: String!, name: String): Token
     """
-    User id can be found from decoded json web token
+    Updates current users information based on Token provided. Empty parametres
+    will be kept as they were.
     """
     updateCurrentUser(name: String, username: String, password: String): Token
     """
@@ -29,6 +30,10 @@ const mutation = gql`
     Creating new Task requires Admin priveleges.
     """
     createTask(name: String!, projectId: String!, description: String): Task
+    """
+    Updating project requires admin priveleges.
+    """
+    updateProject(name: String, id: String!): Project
     """
     A new Hourlog is created by using personal Token from custom http-header 'x-auth-token'
     """

@@ -21,6 +21,19 @@ const projectResolvers = {
           invalidArgs: args
         })
       }
+    },
+    updateProject: async (root, args, { currentUser }) => {
+      if (!currentUser || !currentUser.admin) {
+        throw new ForbiddenError('Editing a Project requires Admin privileges.')
+      }
+      const project = await Project.findById(args.id)
+      if (!project) {
+        throw new UserInputError(`Project with id '${args.id}' not found`)
+      }
+      project.name = args.name || project.name
+      project.save()
+      await project.populate('tasks')
+      return project
     }
   },
   Project: {
