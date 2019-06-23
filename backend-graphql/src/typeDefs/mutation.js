@@ -42,6 +42,14 @@ const mutation = gql`
     A new Hourlog is created by using personal Token from custom http-header 'x-auth-token'
     """
     createHourlog(date: String!, hours: Float!, taskId: String!): Hourlog
+    """
+    Hourlog can be updated if the hourlog's user ID and token's user ID matches.
+    """
+    updateHourlog(id: String!, data: String, hours: Float): Hourlog
+    """
+    Hourlog can be deleted if the hourlog's user ID and token's user ID matches.
+    """
+    deleteHourlog(id: String!): String
   }
 `
 
