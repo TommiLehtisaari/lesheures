@@ -26,14 +26,18 @@ const mutation = gql`
     """
     createProject(name: String!): Project
     """
+    Updating project requires admin priveleges.
+    """
+    updateProject(name: String, id: String!): Project
+    """
     Task is a subclas of a Project and it needs ID of the Project.
     Creating new Task requires Admin priveleges.
     """
     createTask(name: String!, projectId: String!, description: String): Task
     """
-    Updating project requires admin priveleges.
+    Updating a Task requires Admin priveleges.
     """
-    updateProject(name: String, id: String!): Project
+    updateTask(name: String, id: String!, description: String): Task
     """
     A new Hourlog is created by using personal Token from custom http-header 'x-auth-token'
     """

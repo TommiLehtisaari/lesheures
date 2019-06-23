@@ -30,6 +30,20 @@ const taskResolvers = {
           invalidArgs: args
         })
       }
+    },
+    updateTask: async (root, args, { currentUser }) => {
+      if (!currentUser || !currentUser.admin) {
+        throw new ForbiddenError('Updating a task requires Admin privileges.')
+      }
+      const task = await Task.findById(args.id)
+      if (!task) {
+        throw new UserInputError(`Task with given id (${args.id} not found)`)
+      }
+      task.name = args.name || task.name
+      task.description = args.description || task.description
+      task.save()
+      await task.populate('project')
+      return task
     }
   },
   Task: {
