@@ -5,9 +5,21 @@ const bcrypt = require('bcrypt')
 const _ = require('lodash')
 const { User } = require('../models')
 
+const createToken = user => {
+  return {
+    value: jwt.sign(
+      _.pick(user, ['username', 'name', 'admin', 'id']),
+      config.get('jwt_secret')
+    )
+  }
+}
+
 const userResolvers = {
   Query: {
-    allUsers: () => User.find({})
+    allUsers: (root, args, { currentUser }) => {
+      if (!currentUser || !currentUser.admin) return null
+      return User.find({})
+    }
   },
   Mutation: {
     createUser: async (root, args) => {
@@ -25,17 +37,27 @@ const userResolvers = {
 
       try {
         await user.save()
-        return {
-          value: jwt.sign(
-            _.pick(user, ['username', 'name', 'admin', 'id']),
-            config.get('jwt_secret')
-          )
-        }
+        return createToken(user)
       } catch (error) {
         throw new UserInputError(error.message, {
           invalidArgs: args
         })
       }
+    },
+    updateCurrentUser: async (root, args, { currentUser }) => {
+      const user = await User.findById(currentUser._id.toString())
+      if (!user)
+        throw new UserInputError(`User not found with id: '${args.id}'`)
+
+      if (args.password) {
+        const saltRounds = 10
+        user.password = await bcrypt.hash(args.password, saltRounds)
+      }
+
+      user.username = args.username || user.username
+      user.name = args.name || user.name
+      await user.save()
+      return createToken(user)
     },
     login: async (root, args) => {
       const { username, password } = args
@@ -49,12 +71,7 @@ const userResolvers = {
       const validPassword = await bcrypt.compare(password, user.password)
       if (!validPassword) throw new AuthenticationError(`Invalid password`)
 
-      return {
-        value: jwt.sign(
-          _.pick(user, ['username', 'name', 'admin', 'id']),
-          config.get('jwt_secret')
-        )
-      }
+      return createToken(user)
     }
   }
 }

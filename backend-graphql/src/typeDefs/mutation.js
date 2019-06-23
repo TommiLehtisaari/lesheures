@@ -9,7 +9,11 @@ const mutation = gql`
 
     Note: username must be unique.
     """
-    createUser(username: String!, password: String!): Token
+    createUser(username: String!, password: String!, name: String): Token
+    """
+    User id can be found from decoded json web token
+    """
+    updateCurrentUser(name: String, username: String, password: String): Token
     """
     Returns Token for further server-side authentication and
     authorization in exchange for valid username and password.
@@ -26,7 +30,7 @@ const mutation = gql`
     """
     createTask(name: String!, projectId: String!, description: String): Task
     """
-    A new Hourlog is created by using personal Token as custom http-header 'x-auth-token'
+    A new Hourlog is created by using personal Token from custom http-header 'x-auth-token'
     """
     createHourlog(date: String!, hours: Float!, taskId: String!): Hourlog
   }
