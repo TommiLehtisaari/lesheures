@@ -22,7 +22,7 @@ class UserMongo extends DataSource {
     return await User.find({})
   }
 
-  async getUserById({ id }) {
+  async getUserById(id) {
     return await User.findById(id)
   }
 

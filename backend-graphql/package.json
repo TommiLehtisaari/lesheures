@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nodemon ./src/index.js",
-    "test": "NODE_ENV=test jest --verbose"
+    "test": "NODE_ENV=test jest --verbose --runInBand"
   },
   "jest": {
     "testEnvironment": "node",
