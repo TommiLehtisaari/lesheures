@@ -1,14 +1,12 @@
-const { ApolloServer, PubSub } = require('apollo-server')
+const { ApolloServer } = require('apollo-server')
 
 const mongoose = require('mongoose')
 const config = require('config')
 const jwt = require('jsonwebtoken')
 
-const { User } = require('./src/models')
-const { typeDefs } = require('./src/typeDefs')
-const { resolvers } = require('./src/resolvers')
-
-const pubsub = new PubSub()
+const { User } = require('./models')
+const { typeDefs } = require('./typeDefs')
+const { resolvers } = require('./resolvers')
 
 mongoose.set('useFindAndModify', false)
 const env = process.env.NODE_ENV
@@ -17,8 +15,10 @@ const databaseDefiner = env => {
   switch (env) {
     case 'test':
       return config.get('db').toString()
-    default:
+    case 'production':
       return config.get('atlas_uri').toString()
+    default:
+      return config.get('db').toString()
   }
 }
 
@@ -35,9 +35,14 @@ mongoose
     console.log('error connection to MongoDB:', error.message)
   })
 
+const { UserDatabase } = require('./datasources')
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  dataSources: () => ({
+    userDatabase: new UserDatabase()
+  }),
   context: async ({ req }) => {
     const auth = req ? req.headers['x-auth-token'] : null
     if (auth) {

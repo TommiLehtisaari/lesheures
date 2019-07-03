@@ -1,77 +1,47 @@
-const { AuthenticationError, UserInputError } = require('apollo-server')
-const config = require('config')
-const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
-const _ = require('lodash')
-const { User } = require('../models')
-
-const createToken = user => {
-  return {
-    value: jwt.sign(
-      _.pick(user, ['username', 'name', 'admin', 'id']),
-      config.get('jwt_secret')
-    )
-  }
-}
-
 const userResolvers = {
   Query: {
-    allUsers: (root, args, { currentUser }) => {
+    allUsers: (root, args, { currentUser, dataSources }) => {
       if (!currentUser || !currentUser.admin) return null
-      return User.find({})
+      return dataSources.userDatabase.getAllUsers(currentUser)
     }
   },
   Mutation: {
-    createUser: async (root, args) => {
+    createUser: async (root, args, { dataSources }) => {
       const { username, password, name } = args
-
-      const saltRounds = 10
-      const hashPassword = await bcrypt.hash(password, saltRounds)
-
-      const user = new User({
+      const result = await dataSources.userDatabase.createUser({
         username,
         name,
-        password: hashPassword,
-        admin: false
+        password
       })
 
-      try {
-        await user.save()
-        return createToken(user)
-      } catch (error) {
-        throw new UserInputError(error.message, {
-          invalidArgs: args
-        })
+      return {
+        value: result
       }
     },
-    updateCurrentUser: async (root, args, { currentUser }) => {
-      const user = await User.findById(currentUser._id.toString())
-      if (!user)
-        throw new UserInputError(`User not found with id: '${args.id}'`)
+    updateCurrentUser: async (_, args, { currentUser, dataSources }) => {
+      const { username, name, password } = args
+      const id = currentUser._id.toString()
+      const result = await dataSources.userDatabase.updateUser({
+        username,
+        name,
+        password,
+        id
+      })
 
-      if (args.password) {
-        const saltRounds = 10
-        user.password = await bcrypt.hash(args.password, saltRounds)
+      return {
+        value: result
       }
-
-      user.username = args.username || user.username
-      user.name = args.name || user.name
-      await user.save()
-      return createToken(user)
     },
-    login: async (root, args) => {
+    login: async (_, args, { dataSources }) => {
       const { username, password } = args
-      const user = await User.findOne({ username })
-      if (!user) {
-        throw new AuthenticationError(
-          `User with name of '${username}' not found`
-        )
+      const result = await dataSources.userDatabase.login({
+        username,
+        password
+      })
+
+      return {
+        value: result
       }
-
-      const validPassword = await bcrypt.compare(password, user.password)
-      if (!validPassword) throw new AuthenticationError(`Invalid password`)
-
-      return createToken(user)
     }
   }
 }
