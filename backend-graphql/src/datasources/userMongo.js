@@ -41,7 +41,7 @@ class UserMongo extends DataSource {
       await user.save()
       return this.createToken(user)
     } catch (error) {
-      return new UserInputError(error.message, {
+      throw new UserInputError(error.message, {
         invalidArgs: { username, password, name }
       })
     }
@@ -49,7 +49,7 @@ class UserMongo extends DataSource {
 
   async updateUser({ username, name, password, id }) {
     const user = await User.findById(id)
-    if (!user) return new UserInputError(`User not found with id: '${id}'`)
+    if (!user) throw new UserInputError(`User not found with id: '${id}'`)
 
     if (password) {
       const saltRounds = 10
@@ -65,13 +65,11 @@ class UserMongo extends DataSource {
   async login({ username, password }) {
     const user = await User.findOne({ username })
     if (!user) {
-      return new AuthenticationError(
-        `User with name of '${username}' not found`
-      )
+      throw new AuthenticationError(`User with name of '${username}' not found`)
     }
 
     const validPassword = await bcrypt.compare(password, user.password)
-    if (!validPassword) return new AuthenticationError(`Invalid password`)
+    if (!validPassword) throw new AuthenticationError(`Invalid password`)
 
     return this.createToken(user)
   }
