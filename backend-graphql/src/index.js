@@ -3,7 +3,7 @@ const { ApolloServer } = require('apollo-server')
 const config = require('config')
 const jwt = require('jsonwebtoken')
 
-const { UserDatabase } = require('./datasources')
+const { UserDatabase, ProjectDatabase } = require('./datasources')
 const { typeDefs } = require('./typeDefs')
 const { resolvers } = require('./resolvers')
 
@@ -13,7 +13,8 @@ const { resolvers } = require('./resolvers')
 const userDatabase = new UserDatabase()
 
 const dataSources = () => ({
-  userDatabase
+  userDatabase,
+  projectDatabase: new ProjectDatabase()
 })
 
 const context = async ({ req }) => {

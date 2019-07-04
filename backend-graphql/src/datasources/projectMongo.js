@@ -1,0 +1,34 @@
+const { DataSource } = require('apollo-datasource')
+const { UserInputError } = require('apollo-server')
+const { Project } = require('../models')
+
+class ProjectMongo extends DataSource {
+  constructor() {
+    super()
+  }
+
+  async createProject({ name }) {
+    const project = new Project({ name })
+    try {
+      await project.save()
+      return project
+    } catch (error) {
+      throw new UserInputError(error.message, {
+        invalidArgs: name
+      })
+    }
+  }
+
+  async updateProject({ id, name }) {
+    const project = await Project.findById(id)
+    if (!project) {
+      throw new UserInputError(`Project with id '${id}' not found`)
+    }
+    project.name = name || project.name
+    project.save()
+    await project.populate('tasks')
+    return project
+  }
+}
+
+module.exports = ProjectMongo

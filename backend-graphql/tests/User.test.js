@@ -72,7 +72,9 @@ describe('Mutations', () => {
     expect(decodedToken.name).toEqual(testUsers[0].name)
     expect(decodedToken.username).toEqual(testUsers[0].username)
   })
+})
 
+describe('Queries', () => {
   it('Get allUsers', async () => {
     const server = constructTestServer({
       context: () => ({ currentUser: { ...testUsers[0], admin: true } })

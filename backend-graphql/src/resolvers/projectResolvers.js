@@ -1,39 +1,31 @@
 const { Project } = require('../models')
-const { UserInputError, ForbiddenError } = require('apollo-server')
+const { ForbiddenError } = require('apollo-server')
 
 const projectResolvers = {
   Query: {
     allProjects: () => Project.find({})
   },
   Mutation: {
-    createProject: async (root, args, { currentUser }) => {
+    createProject: async (root, args, { currentUser, dataSources }) => {
       if (!currentUser || !currentUser.admin) {
         throw new ForbiddenError(
           'Creating new Project requires Admin privileges.'
         )
       }
-      const project = new Project({ name: args.name })
-      try {
-        await project.save()
-        return project
-      } catch (error) {
-        throw new UserInputError(error.message, {
-          invalidArgs: args
-        })
-      }
+      const result = await dataSources.projectDatabase.createProject({
+        name: args.name
+      })
+      return result
     },
-    updateProject: async (root, args, { currentUser }) => {
+    updateProject: async (root, args, { currentUser, dataSources }) => {
       if (!currentUser || !currentUser.admin) {
         throw new ForbiddenError('Editing a Project requires Admin privileges.')
       }
-      const project = await Project.findById(args.id)
-      if (!project) {
-        throw new UserInputError(`Project with id '${args.id}' not found`)
-      }
-      project.name = args.name || project.name
-      project.save()
-      await project.populate('tasks')
-      return project
+      const result = await dataSources.projectDatabase.updateProject({
+        id: args.id,
+        name: args.name
+      })
+      return result
     }
   },
   Project: {
