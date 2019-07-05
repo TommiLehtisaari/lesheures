@@ -25,9 +25,20 @@ class ProjectMongo extends DataSource {
       throw new UserInputError(`Project with id '${id}' not found`)
     }
     project.name = name || project.name
-    project.save()
-    await project.populate('tasks')
-    return project
+    try {
+      await project.save()
+      await project.populate('tasks')
+      return project
+    } catch (error) {
+      throw new UserInputError(error.message, {
+        invalidArgs: name
+      })
+    }
+  }
+
+  async getTasksById(id) {
+    const project = await Project.findById(id).populate('tasks')
+    return project.tasks
   }
 }
 

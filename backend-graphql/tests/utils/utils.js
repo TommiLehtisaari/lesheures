@@ -4,7 +4,7 @@ const {
   resolvers,
   dataSources,
   context: defaultContext
-} = require('../src/index')
+} = require('../../src/index')
 
 const constructTestServer = ({ context = defaultContext } = {}) => {
   const server = new ApolloServer({

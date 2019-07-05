@@ -29,9 +29,9 @@ const projectResolvers = {
     }
   },
   Project: {
-    tasks: async root => {
-      const project = await Project.findById(root.id).populate('tasks')
-      return project.tasks
+    tasks: async (root, _, { dataSources }) => {
+      const tasks = await dataSources.projectDatabase.getTasksById(root.id)
+      return tasks
     }
   }
 }

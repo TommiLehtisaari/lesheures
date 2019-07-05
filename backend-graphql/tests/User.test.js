@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const config = require('config')
 const jwt = require('jsonwebtoken')
 const { User } = require('../src/models')
-const { constructTestServer } = require('./utils')
+const { constructTestServer } = require('./utils/utils')
 
 const CREATE_USER = gql`
   mutation createUser($username: String!, $name: String, $password: String!) {
