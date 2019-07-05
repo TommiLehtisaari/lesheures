@@ -36,7 +36,7 @@ class ProjectMongo extends DataSource {
     }
   }
 
-  async getTasksById(id) {
+  async getProjectTasks(id) {
     const project = await Project.findById(id).populate('tasks')
     return project.tasks
   }

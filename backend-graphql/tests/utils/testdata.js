@@ -29,7 +29,7 @@ const initProjects = async () => {
   const server = constructTestServer({
     context: () => ({ currentUser: { username: 'testuser', admin: true } })
   })
-  const { mutate } = await createTestClient(server)
+  const { mutate } = createTestClient(server)
 
   await Promise.all(
     testProjects.map(async p => {

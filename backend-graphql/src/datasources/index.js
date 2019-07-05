@@ -4,6 +4,7 @@ const logger = require('../utils/logger')
 
 const UserMongo = require('./userMongo')
 const ProjectMongo = require('./projectMongo')
+const TaskMongo = require('./taskMongo')
 
 mongoose.set('useFindAndModify', false)
 const env = process.env.NODE_ENV
@@ -32,4 +33,8 @@ mongoose
     logger.log('error connection to MongoDB:', error.message)
   })
 
-module.exports = { UserDatabase: UserMongo, ProjectDatabase: ProjectMongo }
+module.exports = {
+  UserDatabase: UserMongo,
+  ProjectDatabase: ProjectMongo,
+  TaskDatabase: TaskMongo
+}

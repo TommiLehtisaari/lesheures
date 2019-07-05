@@ -1,55 +1,33 @@
-const { Task, Project } = require('../models')
-const { UserInputError, ForbiddenError } = require('apollo-server')
+const { ForbiddenError } = require('apollo-server')
 
 const taskResolvers = {
   Mutation: {
-    createTask: async (root, args, { currentUser }) => {
+    createTask: async (_, args, { currentUser, dataSources }) => {
       if (!currentUser || !currentUser.admin) {
         throw new ForbiddenError('Creating task requires Admin privileges.')
       }
-      const project = await Project.findById(args.projectId)
-      if (!project) {
-        throw new UserInputError(
-          `Project with given id (${args.projectId} not found)`
-        )
-      }
-
-      const task = new Task({
+      const result = await dataSources.taskDatabase.createTask({
+        projectId: args.projectId,
         name: args.name,
-        description: args.description,
-        project: project._id
+        description: args.description
       })
-
-      try {
-        await task.save()
-        project.tasks = project.tasks.concat(task._id)
-        await project.save()
-        return task
-      } catch (error) {
-        throw new UserInputError(error.message, {
-          invalidArgs: args
-        })
-      }
+      return result
     },
-    updateTask: async (root, args, { currentUser }) => {
+    updateTask: async (_, args, { currentUser, dataSources }) => {
       if (!currentUser || !currentUser.admin) {
         throw new ForbiddenError('Updating a task requires Admin privileges.')
       }
-      const task = await Task.findById(args.id)
-      if (!task) {
-        throw new UserInputError(`Task with given id (${args.id} not found)`)
-      }
-      task.name = args.name || task.name
-      task.description = args.description || task.description
-      task.save()
-      await task.populate('project')
-      return task
+      const result = await dataSources.taskDatabase.updateTask({
+        id: args.id,
+        name: args.name,
+        description: args.description
+      })
+      return result
     }
   },
   Task: {
-    project: async root => {
-      const task = await Task.findById(root.id).populate('project')
-      return task.project
+    project: async (root, _, { dataSources }) => {
+      return dataSources.taskDatabase.getTaskProject(root.id)
     }
   }
 }

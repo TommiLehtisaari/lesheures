@@ -30,7 +30,7 @@ const projectResolvers = {
   },
   Project: {
     tasks: async (root, _, { dataSources }) => {
-      const tasks = await dataSources.projectDatabase.getTasksById(root.id)
+      const tasks = await dataSources.projectDatabase.getProjectTasks(root.id)
       return tasks
     }
   }
