@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const { Task, Project } = require('../src/models')
 const { constructTestServer } = require('./utils/utils')
 const { testProjects, initProjects } = require('./utils/testdata')
-const { CREATE_PROJECT } = require('./utils/graphqlQueries')
+const { CREATE_PROJECT, ALL_PROJECTS } = require('./utils/graphqlQueries')
 
 const server = constructTestServer({
   context: () => ({ currentUser: { username: 'testuser', admin: true } })
@@ -18,19 +18,7 @@ const UPDATE_PROJECT = gql`
     }
   }
 `
-const ALL_PROJECTS = gql`
-  query allProjects {
-    allProjects {
-      name
-      id
-      tasks {
-        name
-        id
-        description
-      }
-    }
-  }
-`
+
 beforeEach(async () => {
   await Task.deleteMany({})
   await Project.deleteMany({})

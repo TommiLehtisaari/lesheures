@@ -1,80 +1,59 @@
-const { UserInputError, AuthenticationError } = require('apollo-server')
-const { Hourlog, Task, User } = require('../models')
+const { AuthenticationError } = require('apollo-server')
 
 const hourlogResolvers = {
   Query: {
-    allHourlogs: () => Hourlog.find({})
+    allHourlogs: async (_, args, { dataSources }) => {
+      const { dateFrom, dateTo } = args
+      return dataSources.hourlogDatabase.getAllHourlogs({ dateFrom, dateTo })
+    },
+    myHourlogs: async (_, args, { dataSources, currentUser }) => {
+      const { dateFrom, dateTo } = args
+      return dataSources.hourlogDatabase.getMyAllHourlogs({
+        dateFrom,
+        dateTo,
+        currentUser
+      })
+    }
   },
   Mutation: {
-    createHourlog: async (root, args, { currentUser }) => {
+    createHourlog: async (_, args, { currentUser, dataSources }) => {
       if (!currentUser) throw new AuthenticationError('Token not provided')
-      const task = await Task.findById(args.taskId)
-      const { hours, date } = args
-      if (!task || !hours || !date) {
-        throw UserInputError(`Invalid arguments .`, {
-          invalidArgs: args
-        })
-      }
-      const hourlog = new Hourlog({
-        user: currentUser.id,
-        task: task._id,
-        hours,
-        date: new Date(date)
+      const result = dataSources.hourlogDatabase.createHourlog({
+        taskId: args.taskId,
+        hours: args.hours,
+        date: args.date,
+        currentUser
       })
-      await hourlog.save()
-      const user = await User.findById(currentUser._id.toString())
-      user.hourlogs = user.hourlogs.concat(hourlog._id.toString())
-      await user.save()
-      return hourlog
+      return result
     },
-    updateHourlog: async (root, args, { currentUser }) => {
+    updateHourlog: async (_, args, { currentUser, dataSources }) => {
       if (!currentUser) throw new AuthenticationError('Token not provided')
-      const user = await User.findById(currentUser._id.toString())
-      const hourlog = await Hourlog.findById(args.id).populate('user')
-
-      await hourlog.populate('user').populate('project')
-
-      if (!hourlog) {
-        throw UserInputError(`Hourlog with given id '${args.id}' not found`)
-      } else if (hourlog.user.id.toString() !== user._id.toString()) {
-        throw new AuthenticationError(
-          `Hourlog can be updatet only by the author of the hourlog`
-        )
-      }
-
-      hourlog.date = args.date || hourlog.date
-      hourlog.hours = args.hours || hourlog.hours
-      await hourlog.save()
-      return hourlog
+      const result = await dataSources.hourlogDatabase.updateHourlog({
+        id: args.id,
+        hours: args.hours,
+        date: args.date,
+        currentUser
+      })
+      return result
     },
-    deleteHourlog: async (root, args, { currentUser }) => {
+    deleteHourlog: async (_, args, { currentUser, dataSources }) => {
       if (!currentUser) throw new AuthenticationError('Token not provided')
-      const user = await User.findById(currentUser._id.toString())
-      const hourlog = await Hourlog.findById(args.id).populate('user')
-
-      if (!hourlog) {
-        throw new UserInputError(`Hourlog with given id '${args.id}' not found`)
-      }
-
-      if (hourlog.user.id.toString() !== user._id.toString()) {
-        throw new AuthenticationError(
-          `Hourlog can be deleted only by the author of the hourlog`
-        )
-      }
-
-      await hourlog.remove()
-      return 'ok'
+      const result = await dataSources.hourlogDatabase.deleteHourlog({
+        id: args.id,
+        currentUser
+      })
+      return result
     }
   },
   Hourlog: {
-    task: async root => {
-      const hourlog = await Hourlog.findById(root.id).populate('task')
-      return hourlog.task
+    task: async (root, _, { dataSources }) => {
+      const result = await dataSources.hourlogDatabase.getHourlogTask(root.id)
+      return result
     },
-    user: async (root, args, { currentUser }) => {
+    user: async (root, args, { currentUser, dataSources }) => {
       if (!currentUser || !currentUser.admin) return null
-      const hourlog = await Hourlog.findById(root.id).populate('user')
-      return hourlog.user
+      const result = await dataSources.hourlogDatabase.getHourlogUser(root.id)
+      return result
     }
   }
 }

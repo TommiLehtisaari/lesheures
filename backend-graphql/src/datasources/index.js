@@ -5,6 +5,7 @@ const logger = require('../utils/logger')
 const UserMongo = require('./userMongo')
 const ProjectMongo = require('./projectMongo')
 const TaskMongo = require('./taskMongo')
+const HourlogMongo = require('./HourlogMongo')
 
 mongoose.set('useFindAndModify', false)
 const env = process.env.NODE_ENV
@@ -36,5 +37,6 @@ mongoose
 module.exports = {
   UserDatabase: UserMongo,
   ProjectDatabase: ProjectMongo,
-  TaskDatabase: TaskMongo
+  TaskDatabase: TaskMongo,
+  HourlogDatabase: HourlogMongo
 }

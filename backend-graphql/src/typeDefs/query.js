@@ -4,7 +4,8 @@ const query = gql`
   type Query {
     allUsers: [User]
     allProjects: [Project!]
-    allHourlogs: [Hourlog]
+    allHourlogs(dateFrom: String, dateTo: String): [Hourlog]
+    myHourlogs(dateFrom: String, dateTo: String): [Hourlog]
   }
 `
 

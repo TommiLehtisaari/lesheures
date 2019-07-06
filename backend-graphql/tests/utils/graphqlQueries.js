@@ -1,5 +1,19 @@
 const { gql } = require('apollo-server')
 
+const ALL_PROJECTS = gql`
+  query allProjects {
+    allProjects {
+      name
+      id
+      tasks {
+        name
+        id
+        description
+      }
+    }
+  }
+`
+
 const CREATE_PROJECT = gql`
   mutation createProject($name: String!) {
     createProject(name: $name) {
@@ -26,4 +40,4 @@ const CREATE_TASK = gql`
   }
 `
 
-module.exports = { CREATE_PROJECT, CREATE_TASK }
+module.exports = { CREATE_PROJECT, CREATE_TASK, ALL_PROJECTS }

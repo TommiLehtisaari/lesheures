@@ -45,7 +45,7 @@ const mutation = gql`
     """
     Hourlog can be updated if the hourlog's user ID and token's user ID matches.
     """
-    updateHourlog(id: String!, data: String, hours: Float): Hourlog
+    updateHourlog(id: String!, date: String, hours: Float): Hourlog
     """
     Hourlog can be deleted if the hourlog's user ID and token's user ID matches.
     """
