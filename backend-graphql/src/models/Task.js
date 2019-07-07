@@ -8,6 +8,10 @@ const schema = new mongoose.Schema({
   description: {
     type: String
   },
+  color: {
+    type: Number,
+    required: true
+  },
   // hourlogs: [{ type: Schema.Types.ObjectId, ref: 'Hourlog' }],
   project: {
     type: mongoose.Schema.Types.ObjectId,

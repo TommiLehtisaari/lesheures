@@ -1,15 +1,25 @@
 const { ForbiddenError } = require('apollo-server')
 
+const colorDefiner = number => {
+  if (!number || number < 0 || number > 15) {
+    return Math.floor(Math.random() * 15)
+  } else {
+    return number
+  }
+}
+
 const taskResolvers = {
   Mutation: {
     createTask: async (_, args, { currentUser, dataSources }) => {
       if (!currentUser || !currentUser.admin) {
         throw new ForbiddenError('Creating task requires Admin privileges.')
       }
+
       const result = await dataSources.taskDatabase.createTask({
         projectId: args.projectId,
         name: args.name,
-        description: args.description
+        description: args.description,
+        color: colorDefiner(args.color)
       })
       return result
     },
@@ -20,7 +30,8 @@ const taskResolvers = {
       const result = await dataSources.taskDatabase.updateTask({
         id: args.id,
         name: args.name,
-        description: args.description
+        description: args.description,
+        color: colorDefiner(args.color)
       })
       return result
     }

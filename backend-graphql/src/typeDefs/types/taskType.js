@@ -6,6 +6,7 @@ const taskTypes = gql`
     project: Project!
     name: String!
     description: String
+    color: Int!
   }
 `
 

@@ -32,12 +32,19 @@ const mutation = gql`
     """
     Task is a subclas of a Project and it needs ID of the Project.
     Creating new Task requires Admin priveleges.
+    Color should be integer value between 0 and 15, if left empty color will be randomized.
     """
-    createTask(name: String!, projectId: String!, description: String): Task
+    createTask(
+      name: String!
+      projectId: String!
+      description: String
+      color: Int
+    ): Task
     """
     Updating a Task requires Admin priveleges.
+    Color should be integer value between 0 and 15, if left empty color will be randomized.
     """
-    updateTask(name: String, id: String!, description: String): Task
+    updateTask(name: String, id: String!, description: String, color: Int): Task
     """
     A new Hourlog is created by using personal Token from custom http-header 'x-auth-token'
     """

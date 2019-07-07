@@ -7,16 +7,17 @@ class TaskMongo extends DataSource {
     super()
   }
 
-  async createTask({ projectId, name, description }) {
+  async createTask({ projectId, name, description, color }) {
     const project = await Project.findById(projectId)
     if (!project) {
       throw new UserInputError(`Project with given id (${projectId} not found)`)
     }
 
     const task = new Task({
-      name: name,
-      description: description,
-      project: project._id
+      name,
+      description,
+      project: project._id,
+      color
     })
 
     try {
@@ -31,13 +32,14 @@ class TaskMongo extends DataSource {
     }
   }
 
-  async updateTask({ id, name, description }) {
+  async updateTask({ id, name, description, color }) {
     const task = await Task.findById(id)
     if (!task) {
       throw new UserInputError(`Task with given id (${id} not found)`)
     }
     task.name = name || task.name
     task.description = description || task.description
+    task.color = color || task.color
     task.save()
     await task.populate('project')
     return task
