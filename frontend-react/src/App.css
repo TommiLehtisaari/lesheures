@@ -23,6 +23,7 @@
 .space-evenly {
   justify-content: space-evenly;
 }
+
 .space-evenly li {
   background: #eee;
 }
@@ -369,4 +370,10 @@ a:hover, a:visited, a:link, a:active
 .fade-in {
   transition: opacity 0.5s;
   opacity: 1;
+}
+
+.center {
+  position: relative;
+  width: 50%;
+  margin: auto;
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import Column from './Column'
 
-const Row = ({ groupedHourlogs, setOpen, setDate }) => {
+const Row = ({ groupedHourlogs, setOpen, setDate, refetch }) => {
   return (
     <div className="flex-container space-evenly">
       {Object.keys(groupedHourlogs).map(key => {
@@ -12,6 +12,7 @@ const Row = ({ groupedHourlogs, setOpen, setDate }) => {
             header={key}
             setOpen={setOpen}
             setDate={setDate}
+            refetch={refetch}
           />
         )
       })}

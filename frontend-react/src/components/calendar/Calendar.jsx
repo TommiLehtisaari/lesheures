@@ -48,6 +48,7 @@ const Calendar = () => {
         groupedHourlogs={groupedHourlogs}
         setOpen={setOpen}
         setDate={setDate}
+        refetch={hourlogs}
       />
       <AddHourlogModal
         open={open}

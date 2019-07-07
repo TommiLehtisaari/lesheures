@@ -3,7 +3,7 @@ import moment from 'moment'
 import Cell from './Cell'
 import { timeLabel } from '../../utils/labelsFormatter'
 
-const Column = ({ hourlogs, header, setOpen, setDate }) => {
+const Column = ({ hourlogs, header, setOpen, setDate, refetch }) => {
   let classes = 'ts-col'
 
   const handleModalOpen = () => {
@@ -23,7 +23,7 @@ const Column = ({ hourlogs, header, setOpen, setDate }) => {
             {total_hours}
           </div>
           {hourlogs.map((log, key) => {
-            return <Cell key={key} hourlog={log} />
+            return <Cell key={key} hourlog={log} refetch={refetch} />
           })}
           <div className="ts-col-addbtn">
             <p>
