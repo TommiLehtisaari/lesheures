@@ -3,7 +3,7 @@ import { timeLabel } from '../../utils/labelsFormatter'
 
 const Cell = ({ hourlog }) => {
   const { task, hours } = hourlog
-  const color = Math.floor(Math.random() * 15)
+  const color = task.color
   const classes = `ts-cell color-${color}`
   return (
     <div className={classes}>

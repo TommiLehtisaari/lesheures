@@ -3,8 +3,14 @@ import moment from 'moment'
 import Cell from './Cell'
 import { timeLabel } from '../../utils/labelsFormatter'
 
-const Column = ({ hourlogs, header, setOpen }) => {
+const Column = ({ hourlogs, header, setOpen, setDate }) => {
   let classes = 'ts-col'
+
+  const handleModalOpen = () => {
+    setDate(header.toString())
+    setOpen(true)
+  }
+
   const total_hours = timeLabel(
     hourlogs.reduce((accum, log) => (accum += log.hours), 0)
   )
@@ -23,7 +29,7 @@ const Column = ({ hourlogs, header, setOpen }) => {
             <p>
               <i
                 className="fa fa-plus-square fa-lg"
-                onClick={() => setOpen(true)}
+                onClick={() => handleModalOpen()}
               />
             </p>
           </div>

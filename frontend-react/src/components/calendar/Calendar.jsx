@@ -6,9 +6,11 @@ import Row from './Row'
 import Controls from './Controls'
 import AddHourlogModal from './AddHourlogModal'
 
-const Calendar = ({ projects }) => {
+const Calendar = () => {
   const [selectedModay, setSelectedMonday] = useState(moment('2019-07-08'))
   const [open, setOpen] = useState(false)
+  const [date, setDate] = useState(null)
+
   const hourlogs = useQuery(MY_HOURLOGS, {
     variables: {
       dateFrom: selectedModay,
@@ -42,8 +44,17 @@ const Calendar = ({ projects }) => {
         selectedModay={selectedModay}
         setSelectedMonday={setSelectedMonday}
       />
-      <Row groupedHourlogs={groupedHourlogs} setOpen={setOpen} />
-      <AddHourlogModal projects={projects} open={open} setOpen={setOpen} />
+      <Row
+        groupedHourlogs={groupedHourlogs}
+        setOpen={setOpen}
+        setDate={setDate}
+      />
+      <AddHourlogModal
+        open={open}
+        setOpen={setOpen}
+        date={date}
+        hourlogs={hourlogs}
+      />
     </React.Fragment>
   )
 }

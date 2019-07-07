@@ -1,5 +1,18 @@
 import { gql } from 'apollo-boost'
 
+export const GET_TASKS = gql`
+  {
+    allTasks {
+      id
+      name
+      description
+      project {
+        name
+      }
+    }
+  }
+`
+
 export const MY_HOURLOGS = gql`
   query myHourlogs($dateFrom: String!, $dateTo: String!) {
     myHourlogs(dateFrom: $dateFrom, dateTo: $dateTo) {
@@ -9,6 +22,7 @@ export const MY_HOURLOGS = gql`
       task {
         id
         name
+        color
         project {
           id
           name
