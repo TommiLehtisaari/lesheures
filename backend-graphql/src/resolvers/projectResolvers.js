@@ -1,9 +1,10 @@
-const { Project } = require('../models')
 const { ForbiddenError } = require('apollo-server')
 
 const projectResolvers = {
   Query: {
-    allProjects: () => Project.find({})
+    allProjects: (_, args, { dataSources }) => {
+      return dataSources.projectDatabase.getProjects()
+    }
   },
   Mutation: {
     createProject: async (root, args, { currentUser, dataSources }) => {

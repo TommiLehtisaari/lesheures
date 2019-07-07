@@ -7,6 +7,10 @@ class ProjectMongo extends DataSource {
     super()
   }
 
+  async getProjects() {
+    return Project.find({})
+  }
+
   async createProject({ name }) {
     const project = new Project({ name })
     try {

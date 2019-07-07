@@ -7,6 +7,10 @@ class TaskMongo extends DataSource {
     super()
   }
 
+  async getTasks() {
+    return Task.find({})
+  }
+
   async createTask({ projectId, name, description, color }) {
     const project = await Project.findById(projectId)
     if (!project) {

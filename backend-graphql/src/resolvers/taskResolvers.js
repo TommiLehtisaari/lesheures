@@ -9,6 +9,11 @@ const colorDefiner = number => {
 }
 
 const taskResolvers = {
+  Query: {
+    allTasks: async (root, args, { dataSources }) => {
+      return dataSources.taskDatabase.getTasks()
+    }
+  },
   Mutation: {
     createTask: async (_, args, { currentUser, dataSources }) => {
       if (!currentUser || !currentUser.admin) {
