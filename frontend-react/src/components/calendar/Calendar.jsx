@@ -1,17 +1,49 @@
-import React from 'react'
-import _ from 'lodash'
+import React, { useState } from 'react'
+import { useQuery } from 'react-apollo-hooks'
+import moment from 'moment'
+import { MY_HOURLOGS } from './GraphQL'
 import Row from './Row'
+import Controls from './Controls'
+import AddHourlogModal from './AddHourlogModal'
 
-const Calendar = ({ hourlogs }) => {
-  //const [selectedModay, setSelectedMonday] = useState(moment('2019-07-08'))
-
-  const groupedHourlogs = _.groupBy(hourlogs, function(log) {
-    return log.date
+const Calendar = ({ projects }) => {
+  const [selectedModay, setSelectedMonday] = useState(moment('2019-07-08'))
+  const [open, setOpen] = useState(false)
+  const hourlogs = useQuery(MY_HOURLOGS, {
+    variables: {
+      dateFrom: selectedModay,
+      dateTo: moment(selectedModay).add(5, 'days')
+    }
   })
+
+  const getDayFormat = day => {
+    return moment(selectedModay)
+      .add(day, 'days')
+      .format('YYYY-MM-DD')
+  }
+
+  const groupedHourlogs = {
+    [getDayFormat(0)]: [],
+    [getDayFormat(1)]: [],
+    [getDayFormat(2)]: [],
+    [getDayFormat(3)]: [],
+    [getDayFormat(4)]: []
+  }
+
+  if (!hourlogs.loading) {
+    hourlogs.data.myHourlogs.forEach(hourlog => {
+      groupedHourlogs[moment(hourlog.date).format('YYYY-MM-DD')].push(hourlog)
+    })
+  }
 
   return (
     <React.Fragment>
-      <Row groupedHourlogs={groupedHourlogs} />
+      <Controls
+        selectedModay={selectedModay}
+        setSelectedMonday={setSelectedMonday}
+      />
+      <Row groupedHourlogs={groupedHourlogs} setOpen={setOpen} />
+      <AddHourlogModal projects={projects} open={open} setOpen={setOpen} />
     </React.Fragment>
   )
 }
