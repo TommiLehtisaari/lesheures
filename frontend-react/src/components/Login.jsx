@@ -35,8 +35,8 @@ const Login = ({ setCurrentUser }) => {
       setTimeout(() => {
         localStorage.setItem('token', data.login.value)
         const user = jwtDecode(data.login.value)
-        setCurrentUser(user)
         setLoading(false)
+        setCurrentUser(user)
       }, 1000)
     } catch (exeption) {
       setLoading(false)

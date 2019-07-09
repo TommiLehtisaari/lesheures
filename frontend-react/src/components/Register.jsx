@@ -32,8 +32,8 @@ const Register = ({ setCurrentUser }) => {
         const token = data.createUser.value
         localStorage.setItem('token', token)
         const user = jwtDecode(token)
-        setCurrentUser(user)
         setLoading(false)
+        setCurrentUser(user)
       }, 1000)
     } catch (exeption) {
       setLoading(false)
