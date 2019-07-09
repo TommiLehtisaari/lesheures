@@ -159,7 +159,9 @@ a:hover, a:visited, a:link, a:active
 }
 
 .ts-cell-title i {
-  float: right;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 
 .ts-cell-title i:hover {
@@ -373,12 +375,6 @@ a:hover, a:visited, a:link, a:active
 .fade-in {
   transition: opacity 0.5s;
   opacity: 1;
-}
-
-.center {
-  position: relative;
-  width: 50%;
-  margin: auto;
 }
 
 .search .results {

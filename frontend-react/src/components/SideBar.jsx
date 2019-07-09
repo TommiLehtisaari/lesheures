@@ -1,4 +1,5 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 import { Icon, Menu, Sidebar, Image } from 'semantic-ui-react'
 
 const SideBar = () => (
@@ -17,15 +18,15 @@ const SideBar = () => (
       </Menu.Item>
       <Menu.Item as="a">
         <Icon name="clock outline" />
-        Home
+        My Logs
       </Menu.Item>
       <Menu.Item as="a">
-        <Icon name="gamepad" />
-        Games
+        <Icon name="tasks" />
+        Projects
       </Menu.Item>
-      <Menu.Item as="a">
-        <Icon name="camera" />
-        Channels
+      <Menu.Item as={NavLink} to="/logout">
+        <Icon name="sign-out" />
+        Sign out
       </Menu.Item>
     </Sidebar>
   </div>

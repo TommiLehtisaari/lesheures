@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { BrowserRouter } from 'react-router-dom'
 import 'font-awesome/css/font-awesome.css'
 import 'semantic-ui-css/semantic.min.css'
 import './index.css'
@@ -27,7 +28,7 @@ const httpLink = createHttpLink({
 })
 
 const authLink = setContext((_, { headers }) => {
-  //const token = localStorage.getItem('library-token')
+  //const token = localStorage.getItem('token')
   // temp token
   const token =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxlaHRvbW1pIiwibmFtZSI6IlRvbW1pIExlaHRpc2FhcmkiLCJhZG1pbiI6dHJ1ZSwiaWQiOiI1ZDBiNzhkMDJlYTUxYjBiMGU5NDdlN2EiLCJpYXQiOjE1NjEzMTUzNjJ9.DsZCHU09KrW2ZcBOD01CA37l2UXENAjxLqQttub0LTQ'
@@ -64,7 +65,9 @@ const client = new ApolloClient({
 ReactDOM.render(
   <ApolloProvider client={client}>
     <ApolloHooksProvider client={client}>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </ApolloHooksProvider>
   </ApolloProvider>,
   document.getElementById('root')
