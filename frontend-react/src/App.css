@@ -30,6 +30,10 @@
 
 /* Common rules */
 
+body {
+  background-color: #f1f2f7
+}
+
 a:hover, a:visited, a:link, a:active
 {
     text-decoration: none;
@@ -38,8 +42,7 @@ a:hover, a:visited, a:link, a:active
 /* NavBar */
 
 .ts-nav-container {
-  width: 80px !important;
-  min-width: 80px !important;
+  width: 150px !important;
   height: auto;
   padding: 0;
   margin: 0;
@@ -377,3 +380,8 @@ a:hover, a:visited, a:link, a:active
   width: 50%;
   margin: auto;
 }
+
+.search .results {
+  overflow-y: auto;
+  max-height: 300px;
+  }

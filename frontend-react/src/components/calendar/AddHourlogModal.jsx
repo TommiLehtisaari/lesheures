@@ -28,6 +28,7 @@ const AddHourlogModal = ({ open, setOpen, date, hourlogs }) => {
     setTaskId(null)
     setHours(0)
     setDescription(null)
+    setOpen(false)
   }
 
   if (!tasks.data) {
