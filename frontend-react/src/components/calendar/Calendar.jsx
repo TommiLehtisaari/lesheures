@@ -4,9 +4,10 @@ import moment from 'moment'
 import { MY_HOURLOGS } from './GraphQL'
 import Row from './Row'
 import Controls from './Controls'
+import Header from './Header'
 import AddHourlogModal from './AddHourlogModal'
 
-const Calendar = () => {
+const Calendar = ({ currentUser }) => {
   const [selectedModay, setSelectedMonday] = useState(moment('2019-07-08'))
   const [open, setOpen] = useState(false)
   const [date, setDate] = useState(null)
@@ -40,6 +41,7 @@ const Calendar = () => {
 
   return (
     <React.Fragment>
+      <Header currentUser={currentUser} hourlogs={hourlogs} />
       <Controls
         selectedModay={selectedModay}
         setSelectedMonday={setSelectedMonday}

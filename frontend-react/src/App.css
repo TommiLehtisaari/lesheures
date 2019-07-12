@@ -381,3 +381,8 @@ a:hover, a:visited, a:link, a:active
   overflow-y: auto;
   max-height: 300px;
   }
+
+.sideBar-room {
+  margin: 50px;
+  margin-left: 100px;
+}

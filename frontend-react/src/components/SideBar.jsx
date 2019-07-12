@@ -16,11 +16,11 @@ const SideBar = () => (
       <Menu.Item as="a">
         <Image src="logo.png" size="tiny" centered />
       </Menu.Item>
-      <Menu.Item as="a">
+      <Menu.Item as={NavLink} to="/calendar">
         <Icon name="clock outline" />
         My Logs
       </Menu.Item>
-      <Menu.Item as="a">
+      <Menu.Item as={NavLink} to="/projects">
         <Icon name="tasks" />
         Projects
       </Menu.Item>

@@ -4,7 +4,7 @@ import { useMutation } from 'react-apollo-hooks'
 import { gql } from 'apollo-boost'
 import jwtDecode from 'jwt-decode'
 import { Button, Form, Grid, Header, Loader } from 'semantic-ui-react'
-import { Image, Message, Segment, Dimmer } from 'semantic-ui-react'
+import { Message, Segment, Dimmer } from 'semantic-ui-react'
 
 const LOGIN = gql`
   mutation login($username: String!, $password: String!) {
@@ -54,10 +54,10 @@ const Login = ({ setCurrentUser }) => {
       >
         <Grid.Column style={{ maxWidth: 450 }}>
           <Header as="h2" color="teal" textAlign="center">
-            <Image src="/logo.png" /> Log-in to your account
+            Log-in to your account
           </Header>
           <Form size="large">
-            <Segment stacked>
+            <Segment>
               <Dimmer active={loading} inverted>
                 <Loader />
               </Dimmer>

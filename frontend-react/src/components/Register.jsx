@@ -54,7 +54,7 @@ const Register = ({ setCurrentUser }) => {
             Register now
           </Header>
           <Form size="large">
-            <Segment stacked>
+            <Segment>
               <Dimmer active={loading} inverted>
                 <Loader />
               </Dimmer>
