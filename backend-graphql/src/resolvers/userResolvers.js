@@ -1,3 +1,5 @@
+const { ForbiddenError } = require('apollo-server')
+
 const userResolvers = {
   Query: {
     allUsers: (root, args, { currentUser, dataSources }) => {
@@ -28,7 +30,7 @@ const userResolvers = {
     updateCurrentUser: async (_, args, { currentUser, dataSources }) => {
       const { username, name, password } = args
       const id = currentUser._id.toString()
-      const result = await dataSources.userDatabase.updateUser({
+      const result = await dataSources.userDatabase.updateCurrentUser({
         username,
         name,
         password,
@@ -38,6 +40,22 @@ const userResolvers = {
       return {
         value: result
       }
+    },
+    updateUserById: async (_, args, { currentUser, dataSources }) => {
+      if (!currentUser.admin) {
+        throw new ForbiddenError('Only admin can update another user.')
+      }
+
+      const { username, name, password, admin, id } = args
+      const user = await dataSources.userDatabase.updateUser({
+        username,
+        name,
+        password,
+        admin,
+        id
+      })
+
+      return user
     },
     login: async (_, args, { dataSources }) => {
       const { username, password } = args

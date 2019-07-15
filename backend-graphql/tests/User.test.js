@@ -31,6 +31,17 @@ const ALL_USERS = gql`
   }
 `
 
+const UPDATE_USER_TO_ADMIN = gql`
+  mutation updateUserById($id: String!, $admin: Boolean) {
+    updateUserById(id: $id, admin: $admin) {
+      name
+      id
+      username
+      admin
+    }
+  }
+`
+
 const testUsers = [
   { username: 'testuser', name: 'Firstname Lastname', password: 'salainen' }
 ]
@@ -70,6 +81,7 @@ describe('Mutations', () => {
     const token = res.data.login.value
     const decodedToken = jwt.verify(token, config.get('jwt_secret'))
     expect(decodedToken.name).toEqual(testUsers[0].name)
+    expect(decodedToken.admin).toEqual(false)
     expect(decodedToken.username).toEqual(testUsers[0].username)
   })
 
@@ -84,6 +96,34 @@ describe('Mutations', () => {
     const decodedToken = jwt.verify(token, config.get('jwt_secret'))
     expect(decodedToken.username).toEqual('superuser')
     expect(decodedToken.admin).toEqual(true)
+  })
+
+  it('User can be updated to admin by another admin.', async () => {
+    const server = constructTestServer({
+      context: () => ({ currentUser: { ...testUsers[0], admin: true } })
+    })
+    const { mutate } = await createTestClient(server)
+
+    const res = await mutate({
+      mutation: CREATE_USER,
+      variables: {
+        name: 'Made up Name',
+        username: 'madeupuser',
+        password: 'keLo6g12_lM4c'
+      }
+    })
+    const token = res.data.createUser.value
+    const decodedToken = jwt.verify(token, config.get('jwt_secret'))
+
+    expect(decodedToken.admin).toEqual(false)
+
+    const updatedUser = await mutate({
+      mutation: UPDATE_USER_TO_ADMIN,
+      variables: { id: decodedToken.id, admin: true }
+    })
+
+    const actuall = updatedUser.data.updateUserById
+    expect(actuall.admin).toEqual(true)
   })
 })
 

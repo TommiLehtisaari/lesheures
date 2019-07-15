@@ -73,7 +73,7 @@ class UserMongo extends DataSource {
     }
   }
 
-  async updateUser({ username, name, password, id }) {
+  async updateCurrentUser({ username, name, password, id }) {
     const user = await User.findById(id)
     if (!user) throw new UserInputError(`User not found with id: '${id}'`)
 
@@ -86,6 +86,23 @@ class UserMongo extends DataSource {
     user.name = name || user.name
     await user.save()
     return this.createToken(user)
+  }
+
+  async updateUser({ username, name, id, admin }) {
+    const user = await User.findById(id)
+    if (!user) throw new UserInputError(`User not found with id: '${id}'`)
+
+    const define_admin = () => {
+      if (admin === false) return false
+      else if (admin === true) return true
+      return user.admin
+    }
+
+    user.username = username || user.username
+    user.name = name || user.name
+    user.admin = define_admin()
+    await user.save()
+    return user
   }
 
   async login({ username, password }) {

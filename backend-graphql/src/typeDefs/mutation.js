@@ -16,6 +16,10 @@ const mutation = gql`
     """
     updateCurrentUser(name: String, username: String, password: String): Token
     """
+    Updating user requires admin priveleges.
+    """
+    updateUserById(id: String!, admin: Boolean): User
+    """
     Returns Token for further server-side authentication and
     authorization in exchange for valid username and password.
     Server reads Token from custom http-header 'x-auth-token'
