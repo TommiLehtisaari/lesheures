@@ -47,6 +47,32 @@ class UserMongo extends DataSource {
     }
   }
 
+  async createSuperuser({ username, password }) {
+    const db_user = await User.findOne({ username })
+    if (db_user) {
+      throw new UserInputError('Superuser alrady exists in the database.')
+    }
+
+    const saltRounds = 10
+    const hashPassword = await bcrypt.hash(password, saltRounds)
+
+    const user = new User({
+      username,
+      name: 'Superuser',
+      password: hashPassword,
+      admin: true
+    })
+
+    try {
+      await user.save()
+      return this.createToken(user)
+    } catch (error) {
+      throw new UserInputError(error.message, {
+        invalidArgs: { username, password, name }
+      })
+    }
+  }
+
   async updateUser({ username, name, password, id }) {
     const user = await User.findById(id)
     if (!user) throw new UserInputError(`User not found with id: '${id}'`)

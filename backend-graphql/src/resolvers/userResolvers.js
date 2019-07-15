@@ -8,12 +8,19 @@ const userResolvers = {
   Mutation: {
     createUser: async (root, args, { dataSources }) => {
       const { username, password, name } = args
-      const result = await dataSources.userDatabase.createUser({
-        username,
-        name,
-        password
-      })
-
+      let result
+      if (username.toLowerCase() === 'superuser') {
+        result = await dataSources.userDatabase.createSuperuser({
+          username,
+          password
+        })
+      } else {
+        result = await dataSources.userDatabase.createUser({
+          username,
+          name,
+          password
+        })
+      }
       return {
         value: result
       }
