@@ -72,6 +72,19 @@ describe('Mutations', () => {
     expect(decodedToken.name).toEqual(testUsers[0].name)
     expect(decodedToken.username).toEqual(testUsers[0].username)
   })
+
+  it('Superuser creation', async () => {
+    const server = constructTestServer()
+    const { mutate } = await createTestClient(server)
+    const res = await mutate({
+      mutation: CREATE_USER,
+      variables: { username: 'superuser', password: 'keLo6g12_lM4c' }
+    })
+    const token = res.data.createUser.value
+    const decodedToken = jwt.verify(token, config.get('jwt_secret'))
+    expect(decodedToken.username).toEqual('superuser')
+    expect(decodedToken.admin).toEqual(true)
+  })
 })
 
 describe('Queries', () => {
