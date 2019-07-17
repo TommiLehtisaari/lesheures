@@ -6,6 +6,7 @@ import Register from './components/Register'
 import Calendar from './components/Calendar'
 import SideBar from './components/SideBar'
 import Project from './components/Project'
+import User from './components/User'
 
 import './App.css'
 
@@ -31,13 +32,14 @@ function App() {
   }
   return (
     <div className="main-container">
-      <SideBar />
+      <SideBar admin={currentUser.admin} />
       <div className="content-container">
         <Switch>
           <Route
             path="/calendar"
             render={() => <Calendar currentUser={currentUser} />}
           />
+          <Route path="/users" render={() => <User />} />
           <Route
             path="/logout"
             render={() => <Logout setCurrentUser={setCurrentUser} />}

@@ -2,7 +2,7 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { Icon, Menu, Sidebar, Image } from 'semantic-ui-react'
 
-const SideBar = () => (
+const SideBar = ({ admin }) => (
   <div className="ts-nav-container">
     <Sidebar
       as={Menu}
@@ -24,6 +24,12 @@ const SideBar = () => (
         <Icon name="tasks" />
         Projects
       </Menu.Item>
+      {admin && (
+        <Menu.Item as={NavLink} to="/users">
+          <Icon name="user circle" />
+          Users
+        </Menu.Item>
+      )}
       <Menu.Item as={NavLink} to="/logout">
         <Icon name="sign-out" />
         Sign out
