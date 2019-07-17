@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 import { gql } from 'apollo-boost'
 import { Table, Button, Form, ButtonGroup } from 'semantic-ui-react'
+import { Message, Icon } from 'semantic-ui-react'
 import TaskColor from './TaskColor'
 
 const CREATE_TASK = gql`
@@ -25,6 +26,8 @@ const CREATE_TASK = gql`
 
 const ProjectFooter = ({ editMode, projects, project }) => {
   const [open, setOpen] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [error, setError] = useState(false)
   const [name, setName] = useState()
   const [color, setColor] = useState(Math.floor(Math.random() * 15))
   const [description, setDescription] = useState()
@@ -36,13 +39,50 @@ const ProjectFooter = ({ editMode, projects, project }) => {
       await createTask({
         variables: { name, description, color, projectId: project.id }
       })
-      projects.refetch()
+      setSuccess(true)
+      setTimeout(async () => {
+        await projects.refetch()
+        setSuccess(false)
+        setOpen(false)
+      }, 4000)
     } catch (error) {
-      // This could be thrown with toastify
+      setError(true)
+      setTimeout(async () => {
+        setError(false)
+        setOpen(false)
+      }, 4000)
     }
   }
 
   if (!editMode) return null
+
+  if (success || error) {
+    return (
+      <Table.Footer>
+        <Table.Row>
+          <Table.HeaderCell colSpan="4" color="teal">
+            {success && (
+              <Message icon color="green">
+                <Icon name="check" color="green" />
+                <Message.Content>
+                  <Message.Header>New task added</Message.Header>
+                  We are fetching that content for you.
+                </Message.Content>
+              </Message>
+            )}
+            {error && (
+              <Message icon color="red">
+                <Icon name="cancel" color="red" />
+                <Message.Content>
+                  <Message.Header>Task creation failed.</Message.Header>
+                </Message.Content>
+              </Message>
+            )}
+          </Table.HeaderCell>
+        </Table.Row>
+      </Table.Footer>
+    )
+  }
 
   if (open) {
     return (
