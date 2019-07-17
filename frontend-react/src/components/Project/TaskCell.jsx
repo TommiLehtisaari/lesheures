@@ -32,7 +32,7 @@ const TaskCell = ({ editMode, task, projects }) => {
     setOpen(false)
   }
 
-  const options = colorLabels.map(c => {
+  const dropdownOptions = colorLabels.map(c => {
     return {
       key: c.id,
       value: c.id,
@@ -41,7 +41,7 @@ const TaskCell = ({ editMode, task, projects }) => {
       style: { color: c.color }
     }
   })
-  if (open) {
+  if (open && editMode) {
     return (
       <Table.Row>
         <Table.Cell>
@@ -71,7 +71,7 @@ const TaskCell = ({ editMode, task, projects }) => {
             onChange={(_, data) => setColor(data.value)}
             icon="square full"
             style={{ color: getColorById(color) }}
-            options={options}
+            options={dropdownOptions}
             selection
             pointing="bottom right"
             defaultValue={task.color}
