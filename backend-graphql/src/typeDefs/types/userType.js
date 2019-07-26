@@ -6,6 +6,7 @@ const userTypes = gql`
     name: String!
     admin: Boolean!
     id: ID!
+    payByHour: Float
   }
 
   type Token {

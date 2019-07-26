@@ -17,14 +17,8 @@ function App() {
     return (
       <div>
         <Switch>
-          <Route
-            path="/login"
-            render={() => <Login setCurrentUser={setCurrentUser} />}
-          />
-          <Route
-            path="/register"
-            render={() => <Register setCurrentUser={setCurrentUser} />}
-          />
+          <Route path="/login" render={() => <Login setCurrentUser={setCurrentUser} />} />
+          <Route path="/register" render={() => <Register setCurrentUser={setCurrentUser} />} />
           <Redirect path="/" to="/login" />
         </Switch>
       </div>
@@ -35,19 +29,10 @@ function App() {
       <SideBar admin={currentUser.admin} />
       <div className="content-container">
         <Switch>
-          <Route
-            path="/calendar"
-            render={() => <Calendar currentUser={currentUser} />}
-          />
+          <Route path="/calendar" render={() => <Calendar currentUser={currentUser} />} />
           <Route path="/users" render={() => <User />} />
-          <Route
-            path="/logout"
-            render={() => <Logout setCurrentUser={setCurrentUser} />}
-          />
-          <Route
-            path="/projects"
-            render={() => <Project currentUser={currentUser} />}
-          />
+          <Route path="/logout" render={() => <Logout setCurrentUser={setCurrentUser} />} />
+          <Route path="/projects" render={() => <Project currentUser={currentUser} />} />
           <Redirect path="/" to="/calendar" />
         </Switch>
       </div>

@@ -50,12 +50,7 @@ const Edit = ({ hourlog, setEdit, refetch }) => {
           content="Delete"
           color="red"
         />
-        <Button
-          onClick={() => handleEdit()}
-          icon="save"
-          content="Save"
-          color="blue"
-        />
+        <Button onClick={() => handleEdit()} icon="save" content="Save" color="blue" />
       </Button.Group>
     </div>
   )

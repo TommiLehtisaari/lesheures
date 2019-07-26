@@ -18,7 +18,7 @@ const mutation = gql`
     """
     Updating user requires admin priveleges.
     """
-    updateUserById(id: String!, admin: Boolean): User
+    updateUserById(id: String!, admin: Boolean, payByHour: Float): User
     """
     Returns Token for further server-side authentication and
     authorization in exchange for valid username and password.

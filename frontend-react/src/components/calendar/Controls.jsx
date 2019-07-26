@@ -7,9 +7,7 @@ const Controls = ({ selectedModay, setSelectedMonday }) => {
     <div className="calendar-control">
       <i
         className="fa fa-arrow-left arrow"
-        onClick={() =>
-          setSelectedMonday(moment(selectedModay).subtract(7, 'days'))
-        }
+        onClick={() => setSelectedMonday(moment(selectedModay).subtract(7, 'days'))}
       />
       <div className="viikko">{`Week ${label}`}</div>
       <i

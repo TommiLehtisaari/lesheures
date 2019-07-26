@@ -46,13 +46,14 @@ const userResolvers = {
         throw new ForbiddenError('Only admin can update another user.')
       }
 
-      const { username, name, password, admin, id } = args
+      const { username, name, password, admin, id, payByHour } = args
       const user = await dataSources.userDatabase.updateUser({
         username,
         name,
         password,
         admin,
-        id
+        id,
+        payByHour
       })
 
       return user

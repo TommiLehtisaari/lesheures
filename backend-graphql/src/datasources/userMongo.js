@@ -88,7 +88,7 @@ class UserMongo extends DataSource {
     return this.createToken(user)
   }
 
-  async updateUser({ username, name, id, admin }) {
+  async updateUser({ username, name, id, admin, payByHour }) {
     const user = await User.findById(id)
     if (!user) throw new UserInputError(`User not found with id: '${id}'`)
 
@@ -101,6 +101,7 @@ class UserMongo extends DataSource {
     user.username = username || user.username
     user.name = name || user.name
     user.admin = define_admin()
+    user.payByHour = payByHour || user.payByHour
     await user.save()
     return user
   }

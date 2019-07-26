@@ -21,6 +21,9 @@ const schema = new mongoose.Schema({
     type: Boolean,
     required: true
   },
+  payByHour: {
+    type: Number
+  },
   hourlogs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Hourlog' }]
 }).plugin(uniqueValidator)
 

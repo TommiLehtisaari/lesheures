@@ -11,9 +11,7 @@ const Column = ({ hourlogs, header, setOpen, setDate, refetch }) => {
     setOpen(true)
   }
 
-  const total_hours = timeLabel(
-    hourlogs.reduce((accum, log) => (accum += log.hours), 0)
-  )
+  const total_hours = timeLabel(hourlogs.reduce((accum, log) => (accum += log.hours), 0))
   return (
     <React.Fragment>
       <div className="ts-col-container">
@@ -27,10 +25,7 @@ const Column = ({ hourlogs, header, setOpen, setDate, refetch }) => {
           })}
           <div className="ts-col-addbtn">
             <p>
-              <i
-                className="fa fa-plus-square fa-lg"
-                onClick={() => handleModalOpen()}
-              />
+              <i className="fa fa-plus-square fa-lg" onClick={() => handleModalOpen()} />
             </p>
           </div>
         </div>
