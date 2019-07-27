@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { useQuery, useMutation } from 'react-apollo-hooks'
-import { gql } from 'apollo-boost'
+import gql from 'graphql-tag'
 import { Table, Button, Icon, Confirm } from 'semantic-ui-react'
 import Loader from '../Loader'
+import Pay from './Pay'
 
 const ALL_USERS = gql`
   query {
@@ -11,6 +12,7 @@ const ALL_USERS = gql`
       username
       name
       admin
+      payByHour
     }
   }
 `
@@ -60,6 +62,7 @@ const User = () => {
             <Table.HeaderCell>Username</Table.HeaderCell>
             <Table.HeaderCell>Name</Table.HeaderCell>
             <Table.HeaderCell>Admin</Table.HeaderCell>
+            <Table.HeaderCell>Pay by Hour</Table.HeaderCell>
             <Table.HeaderCell>Hourlogs</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -71,17 +74,12 @@ const User = () => {
                 <Table.Cell>{user.username}</Table.Cell>
                 <Table.Cell>{user.name}</Table.Cell>
                 <Table.Cell textAlign="center">
-                  {user.admin && (
-                    <Icon size="large" name="check" color="green" />
-                  )}
+                  {user.admin && <Icon size="large" name="check" color="green" />}
                   {!user.admin && (
-                    <Button
-                      onClick={() => handleAdminGrant(user)}
-                      icon="unlock"
-                      size="large"
-                    />
+                    <Button onClick={() => handleAdminGrant(user)} icon="unlock" size="large" />
                   )}
                 </Table.Cell>
+                <Pay user={user} users={users} />
                 <Table.Cell textAlign="center">
                   <Button icon="clock" content="Hourlogs" />
                 </Table.Cell>
