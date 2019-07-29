@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Report = () => {
-  return <H1>Hello</H1>
+  return <h1>Loading ...</h1>
 }
 
 export default Report

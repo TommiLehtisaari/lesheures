@@ -7,6 +7,7 @@ import Calendar from './components/Calendar'
 import SideBar from './components/SideBar'
 import Project from './components/Project'
 import User from './components/User'
+import Report from './components/Report'
 
 import './App.css'
 
@@ -31,6 +32,7 @@ function App() {
         <Switch>
           <Route path="/calendar" render={() => <Calendar currentUser={currentUser} />} />
           <Route path="/users" render={() => <User />} />
+          <Route path="/report" render={() => <Report />} />
           <Route path="/logout" render={() => <Logout setCurrentUser={setCurrentUser} />} />
           <Route path="/projects" render={() => <Project currentUser={currentUser} />} />
           <Redirect path="/" to="/calendar" />
