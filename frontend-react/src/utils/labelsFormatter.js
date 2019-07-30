@@ -37,4 +37,10 @@ const getColorById = id => {
   return item.color
 }
 
-module.exports = { timeLabel, colorLabels, getColorById }
+const getRandomColor = () => {
+  const randomInt = Math.floor(Math.random() * 15)
+  const color = getColorById(randomInt)
+  return color
+}
+
+module.exports = { timeLabel, colorLabels, getColorById, getRandomColor }

@@ -1,10 +1,23 @@
 import React, { useState } from 'react'
-import { Segment, Button, Label, Menu, Icon, Grid } from 'semantic-ui-react'
-import { Slider } from 'react-semantic-ui-range'
+import gql from 'graphql-tag'
+import { useQuery } from 'react-apollo-hooks'
+import { Switch, Route } from 'react-router-dom'
 import moment from 'moment'
+import ReportMenu from './ReportMenu'
 import ReportTable from './ReportTable'
+import ProjectChart from './ProjectChart'
 
-const Report = () => {
+const ALL_PROJECTS = gql`
+  query allProjects($dateFrom: String!, $dateTo: String!) {
+    allProjects {
+      name
+      hours(dateFrom: $dateFrom, dateTo: $dateTo)
+      cost(dateFrom: $dateFrom, dateTo: $dateTo)
+    }
+  }
+`
+
+const Report = ({ match }) => {
   const [dateFrom, setDateFrom] = useState(
     moment()
       .startOf('year')
@@ -16,81 +29,23 @@ const Report = () => {
       .format('YYYY-MM-DD')
   )
 
-  const handleYearDecrement = () => {
-    setDateFrom(
-      moment(dateFrom)
-        .subtract(1, 'year')
-        .format('YYYY-MM-DD')
-    )
-    setDateTo(
-      moment(dateTo)
-        .subtract(1, 'year')
-        .format('YYYY-MM-DD')
-    )
-  }
-
-  const handleYearIncrement = () => {
-    setDateFrom(
-      moment(dateFrom)
-        .add(1, 'year')
-        .format('YYYY-MM-DD')
-    )
-    setDateTo(
-      moment(dateTo)
-        .add(1, 'year')
-        .format('YYYY-MM-DD')
-    )
-  }
-
-  const handleMonthSlider = value => {
-    setDateFrom(moment(dateFrom).month(value[0]))
-    setDateTo(moment(dateTo).month(value[1]))
-  }
+  const projects = useQuery(ALL_PROJECTS, {
+    variables: { dateFrom, dateTo }
+  })
 
   return (
     <div>
-      <Segment>
-        <Menu icon="labeled">
-          <Menu.Item>
-            <Icon name="table" /> Table
-          </Menu.Item>
-          <Menu.Item>
-            <Icon name="pie chart" />
-            Charts
-          </Menu.Item>
-        </Menu>
-        <Grid>
-          <Grid.Column width="13" textAlign="center">
-            <Segment>
-              <Label attached="top">
-                {moment(dateFrom).format('MMMM YYYY')} - {moment(dateTo).format('MMMM YYYY')}
-              </Label>
-              <Slider
-                multiple
-                color="green"
-                settings={{
-                  start: [0, 11],
-                  min: 0,
-                  max: 11,
-                  step: 1,
-                  onChange: value => handleMonthSlider(value)
-                }}
-              />
-            </Segment>
-          </Grid.Column>
-          <Grid.Column width="3" textAlign="center">
-            <Segment>
-              <Label attached="top">Select Year</Label>
-              <Button.Group size="mini">
-                <Button icon="minus" onClick={handleYearDecrement} />
-                <Label>{moment(dateFrom).year()}</Label>
-                <Button icon="plus" onClick={handleYearIncrement} />
-              </Button.Group>
-            </Segment>
-          </Grid.Column>
-        </Grid>
-      </Segment>
-      <ReportTable dateFrom={dateFrom} dateTo={dateTo} />
+      <ReportMenu
+        dateFrom={dateFrom}
+        dateTo={dateTo}
+        setDateFrom={setDateFrom}
+        setDateTo={setDateTo}
+        match={match}
+      />
+      <Switch>
+        <Route path="/report/table" render={() => <ReportTable projects={projects} />} />
+        <Route path="/report/chart" render={() => <ProjectChart projects={projects} />} />
+      </Switch>
     </div>
   )
 }

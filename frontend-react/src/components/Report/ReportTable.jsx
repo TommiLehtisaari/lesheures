@@ -1,23 +1,7 @@
 import React from 'react'
-import gql from 'graphql-tag'
 import { Table } from 'semantic-ui-react'
-import { useQuery } from 'react-apollo-hooks'
 
-const ALL_HOURLOGS = gql`
-  query allProjects($dateFrom: String!, $dateTo: String!) {
-    allProjects {
-      name
-      hours(dateFrom: $dateFrom, dateTo: $dateTo)
-      cost(dateFrom: $dateFrom, dateTo: $dateTo)
-    }
-  }
-`
-
-const ReportTable = ({ dateFrom, dateTo }) => {
-  const projects = useQuery(ALL_HOURLOGS, {
-    variables: { dateFrom, dateTo }
-  })
-
+const ReportTable = ({ projects }) => {
   if (!projects.data.allProjects) return <p>loading . . . .</p>
 
   const { allProjects } = projects.data

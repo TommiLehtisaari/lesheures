@@ -22,7 +22,7 @@ const SideBar = ({ admin }) => (
             <Icon name="user circle" />
             Users
           </Menu.Item>
-          <Menu.Item as={NavLink} to="/report">
+          <Menu.Item as={NavLink} to="/report/table">
             <Icon name="chart bar outline" />
             Report
           </Menu.Item>
