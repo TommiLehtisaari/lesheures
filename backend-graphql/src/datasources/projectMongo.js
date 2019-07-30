@@ -11,6 +11,10 @@ class ProjectMongo extends DataSource {
     return Project.find({})
   }
 
+  async getProjectById(id) {
+    return Project.findById(id)
+  }
+
   async createProject({ name }) {
     const project = new Project({ name })
     try {

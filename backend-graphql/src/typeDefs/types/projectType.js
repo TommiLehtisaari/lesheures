@@ -5,6 +5,7 @@ const projectTypes = gql`
     id: ID!
     name: String!
     tasks: [Task]
+    hours(dateFrom: String, dateTo: String): Float
   }
 `
 

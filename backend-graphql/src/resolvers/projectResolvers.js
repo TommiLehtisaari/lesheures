@@ -4,6 +4,9 @@ const projectResolvers = {
   Query: {
     allProjects: (_, args, { dataSources }) => {
       return dataSources.projectDatabase.getProjects()
+    },
+    projectById: (_, args, { dataSources }) => {
+      return dataSources.projectDatabase.getProjectById(args.id)
     }
   },
   Mutation: {
@@ -33,6 +36,15 @@ const projectResolvers = {
     tasks: async (root, _, { dataSources }) => {
       const tasks = await dataSources.projectDatabase.getProjectTasks(root.id)
       return tasks
+    },
+    hours: async (root, args, { dataSources }) => {
+      const hourlogs = await dataSources.hourlogDatabase.getHourlogsByProjectRoot(
+        { root, dateTo: args.dateTo, dateFrom: args.dateFrom }
+      )
+      const hours = hourlogs.reduce((accum, current) => {
+        return (accum += current.hours)
+      }, 0)
+      return hours
     }
   }
 }

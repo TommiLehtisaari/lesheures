@@ -17,7 +17,15 @@ class HourlogMongo extends DataSource {
 
   async getMyAllHourlogs({ dateFrom, dateTo, currentUser }) {
     const query = { user: currentUser.id }
-    if (dateFrom) {
+    if (dateFrom && dateTo) {
+      query.date = { $gte: dateFrom, $lte: dateTo }
+    }
+    return Hourlog.find(query)
+  }
+
+  async getHourlogsByProjectRoot({ root, dateFrom, dateTo }) {
+    const query = { task: { $in: root.tasks } }
+    if (dateFrom && dateTo) {
       query.date = { $gte: dateFrom, $lte: dateTo }
     }
     return Hourlog.find(query)
