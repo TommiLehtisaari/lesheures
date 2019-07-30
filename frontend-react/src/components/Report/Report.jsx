@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Segment, Button, Label, Menu } from 'semantic-ui-react'
-import { Icon } from 'semantic-ui-react'
+import { Segment, Button, Label, Menu, Icon, Grid } from 'semantic-ui-react'
+import { Slider } from 'react-semantic-ui-range'
 import moment from 'moment'
 import ReportTable from './ReportTable'
 
@@ -42,6 +42,11 @@ const Report = () => {
     )
   }
 
+  const handleMonthSlider = value => {
+    setDateFrom(moment(dateFrom).month(value[0]))
+    setDateTo(moment(dateTo).month(value[1]))
+  }
+
   return (
     <div>
       <Segment>
@@ -54,20 +59,36 @@ const Report = () => {
             Charts
           </Menu.Item>
         </Menu>
-        <Button.Group size="mini">
-          <Button content="1 - 3 m" />
-          <Button content="4 - 6 m" />
-          <Button content="7 - 9 m" />
-          <Button content="10 - 12 m" />
-          <Button content="1 - 6 m" />
-          <Button content="6 - 12 m" />
-          <Button content="1 - 12 m" />
-        </Button.Group>
-        <Button.Group floated="right" size="mini">
-          <Button icon="minus" onClick={handleYearDecrement} />
-          <Label>{moment(dateFrom).year()}</Label>
-          <Button icon="plus" onClick={handleYearIncrement} />
-        </Button.Group>
+        <Grid>
+          <Grid.Column width="13" textAlign="center">
+            <Segment>
+              <Label attached="top">
+                {moment(dateFrom).format('MMMM YYYY')} - {moment(dateTo).format('MMMM YYYY')}
+              </Label>
+              <Slider
+                multiple
+                color="green"
+                settings={{
+                  start: [0, 11],
+                  min: 0,
+                  max: 11,
+                  step: 1,
+                  onChange: value => handleMonthSlider(value)
+                }}
+              />
+            </Segment>
+          </Grid.Column>
+          <Grid.Column width="3" textAlign="center">
+            <Segment>
+              <Label attached="top">Select Year</Label>
+              <Button.Group size="mini">
+                <Button icon="minus" onClick={handleYearDecrement} />
+                <Label>{moment(dateFrom).year()}</Label>
+                <Button icon="plus" onClick={handleYearIncrement} />
+              </Button.Group>
+            </Segment>
+          </Grid.Column>
+        </Grid>
       </Segment>
       <ReportTable dateFrom={dateFrom} dateTo={dateTo} />
     </div>
