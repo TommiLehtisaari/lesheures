@@ -51,10 +51,11 @@ const projectResolvers = {
         { root, dateTo: args.dateTo, dateFrom: args.dateFrom }
       )
 
-      const hours = hourlogs.reduce((accum, current) => {
+      const cost = hourlogs.reduce((accum, current) => {
         return (accum += current.hours * current.user.payByHour)
       }, 0)
-      return hours
+
+      return Math.floor(cost * 100) / 100
     }
   }
 }
