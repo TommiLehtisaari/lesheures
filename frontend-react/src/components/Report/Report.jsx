@@ -1,89 +1,76 @@
-import React from 'react'
-import gql from 'graphql-tag'
-import { useQuery } from 'react-apollo-hooks'
-import { Table } from 'semantic-ui-react'
-
-const ALL_HOURLOGS = gql`
-  query {
-    allHourlogs {
-      user {
-        payByHour
-      }
-      task {
-        id
-        name
-        project {
-          id
-          name
-        }
-      }
-      hours
-      date
-    }
-  }
-`
+import React, { useState } from 'react'
+import { Segment, Button, Label, Menu } from 'semantic-ui-react'
+import { Icon } from 'semantic-ui-react'
+import moment from 'moment'
+import ReportTable from './ReportTable'
 
 const Report = () => {
-  const hourlogs = useQuery(ALL_HOURLOGS)
+  const [dateFrom, setDateFrom] = useState(
+    moment()
+      .startOf('year')
+      .format('YYYY-MM-DD')
+  )
+  const [dateTo, setDateTo] = useState(
+    moment()
+      .endOf('year')
+      .format('YYYY-MM-DD')
+  )
 
-  if (!hourlogs.data.allHourlogs) return <p>loading . . . .</p>
+  const handleYearDecrement = () => {
+    setDateFrom(
+      moment(dateFrom)
+        .subtract(1, 'year')
+        .format('YYYY-MM-DD')
+    )
+    setDateTo(
+      moment(dateTo)
+        .subtract(1, 'year')
+        .format('YYYY-MM-DD')
+    )
+  }
 
-  const { allHourlogs } = hourlogs.data
-
-  const projects = allHourlogs.reduce((accum, current) => {
-    const { name } = current.task.project
-    let project = accum.find(a => a.name === name)
-
-    if (project) {
-      project.hourlogs = project.hourlogs.concat(current)
-      project.totalHours = project.totalHours += current.hours
-      project.totalCost = project.totalCost += current.hours * current.user.payByHour
-
-      return accum.map(a => (a.name !== name ? a : project))
-    } else {
-      return [
-        ...accum,
-        {
-          name,
-          totalCost: current.hours * current.user.payByHour,
-          totalHours: current.hours,
-          hourlogs: [current]
-        }
-      ]
-    }
-  }, [])
-  console.log(projects)
+  const handleYearIncrement = () => {
+    setDateFrom(
+      moment(dateFrom)
+        .add(1, 'year')
+        .format('YYYY-MM-DD')
+    )
+    setDateTo(
+      moment(dateTo)
+        .add(1, 'year')
+        .format('YYYY-MM-DD')
+    )
+  }
 
   return (
-    <Table>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>Name</Table.HeaderCell>
-          <Table.HeaderCell>Total Hours</Table.HeaderCell>
-          <Table.HeaderCell>Total Costs</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        {projects.map(p => {
-          return (
-            <Table.Row key={p.name}>
-              <Table.Cell>{p.name}</Table.Cell>
-              <Table.Cell>{p.totalHours} h</Table.Cell>
-              <Table.Cell>{Math.floor(p.totalCost * 100) / 100} €</Table.Cell>
-            </Table.Row>
-          )
-        })}
-      </Table.Body>
-      <Table.Footer>
-        <Table.Row style={{ fontWeight: 'Bold' }}>
-          <Table.Cell>Total</Table.Cell>
-          <Table.Cell>{projects.reduce((a, c) => (a += c.totalHours), 0)} h</Table.Cell>
-          <Table.Cell>
-            {Math.floor(projects.reduce((a, c) => (a += c.totalCost), 0) * 100) / 100} €
-          </Table.Cell>
-        </Table.Row>
-      </Table.Footer>
-    </Table>
+    <div>
+      <Segment>
+        <Menu icon="labeled">
+          <Menu.Item>
+            <Icon name="table" /> Table
+          </Menu.Item>
+          <Menu.Item>
+            <Icon name="pie chart" />
+            Charts
+          </Menu.Item>
+        </Menu>
+        <Button.Group size="mini">
+          <Button content="1 - 3 m" />
+          <Button content="4 - 6 m" />
+          <Button content="7 - 9 m" />
+          <Button content="10 - 12 m" />
+          <Button content="1 - 6 m" />
+          <Button content="6 - 12 m" />
+          <Button content="1 - 12 m" />
+        </Button.Group>
+        <Button.Group floated="right" size="mini">
+          <Button icon="minus" onClick={handleYearDecrement} />
+          <Label>{moment(dateFrom).year()}</Label>
+          <Button icon="plus" onClick={handleYearIncrement} />
+        </Button.Group>
+      </Segment>
+      <ReportTable dateFrom={dateFrom} dateTo={dateTo} />
+    </div>
   )
 }
 
