@@ -28,7 +28,7 @@ class HourlogMongo extends DataSource {
     if (dateFrom && dateTo) {
       query.date = { $gte: dateFrom, $lte: dateTo }
     }
-    return Hourlog.find(query)
+    return Hourlog.find(query).populate('user')
   }
 
   async createHourlog({ taskId, hours, date, currentUser }) {

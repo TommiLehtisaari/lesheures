@@ -45,6 +45,16 @@ const projectResolvers = {
         return (accum += current.hours)
       }, 0)
       return hours
+    },
+    cost: async (root, args, { dataSources }) => {
+      const hourlogs = await dataSources.hourlogDatabase.getHourlogsByProjectRoot(
+        { root, dateTo: args.dateTo, dateFrom: args.dateFrom }
+      )
+
+      const hours = hourlogs.reduce((accum, current) => {
+        return (accum += current.hours * current.user.payByHour)
+      }, 0)
+      return hours
     }
   }
 }
