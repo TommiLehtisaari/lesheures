@@ -7,6 +7,8 @@ const taskTypes = gql`
     name: String!
     description: String
     color: Int!
+    hours(dateFrom: String, dateTo: String): Float
+    cost(dateFrom: String, dateTo: String): Float
   }
 `
 

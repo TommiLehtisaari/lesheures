@@ -23,6 +23,14 @@ class HourlogMongo extends DataSource {
     return Hourlog.find(query)
   }
 
+  async getHourlogsByTaskRoot({ root, dateFrom, dateTo }) {
+    const query = { task: root.id }
+    if (dateFrom && dateTo) {
+      query.date = { $gte: dateFrom, $lte: dateTo }
+    }
+    return Hourlog.find(query).populate('user')
+  }
+
   async getHourlogsByProjectRoot({ root, dateFrom, dateTo }) {
     const query = { task: { $in: root.tasks } }
     if (dateFrom && dateTo) {
