@@ -8,7 +8,11 @@ import Header from './Header'
 import AddHourlogModal from './AddHourlogModal'
 
 const Calendar = ({ currentUser }) => {
-  const [selectedModay, setSelectedMonday] = useState(moment('2019-07-08'))
+  const [selectedModay, setSelectedMonday] = useState(
+    moment()
+      .startOf('week')
+      .add(1, 'day')
+  )
   const [open, setOpen] = useState(false)
   const [date, setDate] = useState(null)
 
@@ -42,22 +46,14 @@ const Calendar = ({ currentUser }) => {
   return (
     <React.Fragment>
       <Header currentUser={currentUser} hourlogs={hourlogs} />
-      <Controls
-        selectedModay={selectedModay}
-        setSelectedMonday={setSelectedMonday}
-      />
+      <Controls selectedModay={selectedModay} setSelectedMonday={setSelectedMonday} />
       <Row
         groupedHourlogs={groupedHourlogs}
         setOpen={setOpen}
         setDate={setDate}
         refetch={hourlogs}
       />
-      <AddHourlogModal
-        open={open}
-        setOpen={setOpen}
-        date={date}
-        hourlogs={hourlogs}
-      />
+      <AddHourlogModal open={open} setOpen={setOpen} date={date} hourlogs={hourlogs} />
     </React.Fragment>
   )
 }

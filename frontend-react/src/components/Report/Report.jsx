@@ -5,12 +5,13 @@ import { Switch, Route } from 'react-router-dom'
 import moment from 'moment'
 import ReportMenu from './ReportMenu'
 import ReportTable from './ReportTable'
-import ProjectChart from './ProjectChart'
+import ReportChart from './ReportChart'
 
 const ALL_PROJECTS = gql`
   query allProjects($dateFrom: String!, $dateTo: String!) {
     allProjects {
       name
+      id
       hours(dateFrom: $dateFrom, dateTo: $dateTo)
       cost(dateFrom: $dateFrom, dateTo: $dateTo)
     }
@@ -44,7 +45,7 @@ const Report = ({ match }) => {
       />
       <Switch>
         <Route path="/report/table" render={() => <ReportTable projects={projects} />} />
-        <Route path="/report/chart" render={() => <ProjectChart projects={projects} />} />
+        <Route path="/report/chart" render={() => <ReportChart projects={projects} />} />
       </Switch>
     </div>
   )
