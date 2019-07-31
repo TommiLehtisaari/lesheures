@@ -6,6 +6,7 @@ import moment from 'moment'
 import ReportMenu from './ReportMenu'
 import ReportTable from './ReportTable'
 import ReportChart from './ReportChart'
+import ProjectDashboard from './ProjectDashboard'
 
 const ALL_PROJECTS = gql`
   query allProjects($dateFrom: String!, $dateTo: String!) {
@@ -46,6 +47,10 @@ const Report = ({ match }) => {
       <Switch>
         <Route path="/report/table" render={() => <ReportTable projects={projects} />} />
         <Route path="/report/chart" render={() => <ReportChart projects={projects} />} />
+        <Route
+          path="/report/project/:id"
+          render={({ match }) => <ProjectDashboard id={match.params.id} projects={projects} />}
+        />
       </Switch>
     </div>
   )

@@ -1,9 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
+
 import 'font-awesome/css/font-awesome.css'
 import 'semantic-ui-css/semantic.min.css'
 import './index.css'
+
 import App from './App'
 
 import { ApolloProvider } from 'react-apollo'

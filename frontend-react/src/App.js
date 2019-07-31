@@ -33,7 +33,7 @@ function App() {
           <Route path="/calendar" render={() => <Calendar currentUser={currentUser} />} />
           <Route path="/users" render={() => <User />} />
           <Route
-            path={['/report/table', '/report/chart']}
+            path={['/report/table', '/report/chart', '/report/project/:id']}
             render={({ match }) => <Report match={match} />}
           />
           <Redirect path="/report" to="/report/table" />

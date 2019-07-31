@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Redirect } from 'react-router-dom'
 import { Grid, Segment, Container } from 'semantic-ui-react'
 import { Pie, Bar } from 'react-chartjs-2'
 import { getRandomColor } from '../../utils/labelsFormatter'
 
-const ReportChart = ({ projects }) => {
+const ReportChart = props => {
+  const { projects } = props
+  const [redirect, setRedirect] = useState(undefined)
   // Placeholders are important for stable rendering
   const allProjects = projects.data.allProjects || [
     { name: 'placeholder', hours: 300 },
@@ -19,8 +22,7 @@ const ReportChart = ({ projects }) => {
   })
 
   const handlePieClick = e => {
-    console.log(e[0]._index)
-    console.log(allProjects[e[0]._index])
+    setRedirect(allProjects[e[0]._index].id)
   }
 
   const hourData = {
@@ -41,6 +43,10 @@ const ReportChart = ({ projects }) => {
         backgroundColor
       }
     ]
+  }
+
+  if (redirect) {
+    return <Redirect to={`/report/project/${redirect}`} />
   }
 
   return (
@@ -65,7 +71,7 @@ const ReportChart = ({ projects }) => {
               onElementsClick={e => handlePieClick(e)}
               options={{
                 legend: { display: false },
-                title: { display: true, text: 'Costs by Project' }
+                title: { display: true, text: 'Costs in euros by Project' }
               }}
             />
           </Segment>

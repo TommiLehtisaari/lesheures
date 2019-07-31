@@ -23,6 +23,7 @@
     "react-apollo-hooks": "^0.4.5",
     "react-chartjs-2": "^2.7.6",
     "react-dom": "^16.8.6",
+    "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
     "react-semantic-ui-range": "^0.7.0",
