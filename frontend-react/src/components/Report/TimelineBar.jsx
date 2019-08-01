@@ -13,9 +13,25 @@ const GET_HOURLOGS = gql`
   }
 `
 
-const TimelineBar = ({ dateTo, dateFrom }) => {
-  const query = useQuery(GET_HOURLOGS, { variables: { dateFrom, dateTo } })
-  const hourlogs = query.data.allHourlogs
+const PROJECT_HOURLOGS = gql`
+  query projectById($id: String!, $dateFrom: String, $dateTo: String) {
+    projectById(id: $id) {
+      hourlogs(dateFrom: $dateFrom, dateTo: $dateTo) {
+        date
+        hours
+      }
+    }
+  }
+`
+
+const TimelineBar = ({ dateTo, dateFrom, id }) => {
+  const query_string = id ? PROJECT_HOURLOGS : GET_HOURLOGS
+  const query = useQuery(query_string, { variables: { id, dateFrom, dateTo } })
+  const dataString = id ? 'projectById' : 'allHourlogs'
+
+  const data = query.data[dataString] ? query.data[dataString] : [{ date: dateFrom, hours: 0 }]
+
+  const hourlogs = id ? data.hourlogs : data
 
   let firstMonth = moment(dateFrom).month()
   let lastMonth = moment(dateTo).month()

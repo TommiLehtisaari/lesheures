@@ -4,6 +4,7 @@ import { Pie } from 'react-chartjs-2'
 import gql from 'graphql-tag'
 import { useQuery } from 'react-apollo-hooks'
 import { getColorById } from '../../utils/labelsFormatter'
+import TimelineBar from './TimelineBar'
 
 const PROJECT_BY_ID = gql`
   query projectById($id: String!, $dateFrom: String, $dateTo: String) {
@@ -37,7 +38,6 @@ const ProjectDashboard = ({ id, dateFrom, dateTo }) => {
 
   const labels = projectById.tasks.map(t => t.name)
   const hours = projectById.tasks.map(t => t.hours)
-  const cost = projectById.tasks.map(t => t.cost)
   const backgroundColor = projectById.tasks.map(t => {
     return getColorById(t.color)
   })
@@ -55,38 +55,42 @@ const ProjectDashboard = ({ id, dateFrom, dateTo }) => {
   return (
     <Container>
       <Grid>
-        <Grid.Row>
-          <Grid.Column width="6">
-            <Segment>
-              <h4>{projectById.name}</h4>
-              <List>
-                {projectById.tasks.map(t => {
-                  return (
-                    <List.Item key={t.name}>
-                      <List.Icon name="clock outline" verticalAlign="middle" size="large" />
-                      <List.Content>
-                        <List.Header>{t.name}</List.Header>
-                        <List.Description>{t.hours} h</List.Description>
-                      </List.Content>
-                    </List.Item>
-                  )
-                })}
-              </List>
-            </Segment>
-          </Grid.Column>
-          <Grid.Column width="10">
-            <Segment>
-              <Pie
-                data={hourData}
-                options={{
-                  legend: { display: true, position: 'left' },
-                  title: { display: true, text: 'Project Hours by Tasks' }
-                }}
-              />
-            </Segment>
-          </Grid.Column>
-        </Grid.Row>
-        <Grid.Row>data</Grid.Row>
+        <Grid.Column width="6">
+          <Segment>
+            <h4>{projectById.name}</h4>
+            <List>
+              {projectById.tasks.map(t => {
+                return (
+                  <List.Item key={t.name}>
+                    <List.Icon name="clock outline" verticalAlign="middle" size="large" />
+                    <List.Content>
+                      <List.Header>{t.name}</List.Header>
+                      <List.Description>{t.hours} h</List.Description>
+                    </List.Content>
+                  </List.Item>
+                )
+              })}
+            </List>
+          </Segment>
+        </Grid.Column>
+        <Grid.Column width="10">
+          <Segment>
+            <Pie
+              data={hourData}
+              options={{
+                legend: { display: true, position: 'left' },
+                title: { display: true, text: 'Project Hours by Tasks' }
+              }}
+            />
+          </Segment>
+        </Grid.Column>
+      </Grid>
+      <Grid>
+        <Grid.Column width="16">
+          <Segment>
+            <TimelineBar id={id} dateFrom={dateFrom} dateTo={dateTo} />
+          </Segment>
+        </Grid.Column>
       </Grid>
     </Container>
   )

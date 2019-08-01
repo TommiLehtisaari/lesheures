@@ -17,17 +17,15 @@ const SideBar = ({ admin }) => (
         Projects
       </Menu.Item>
       {admin && (
-        <React.Fragment>
-          <Menu.Item as={NavLink} to="/users">
-            <Icon name="user circle" />
-            Users
-          </Menu.Item>
-          <Menu.Item as={NavLink} to="/report/table">
-            <Icon name="chart bar outline" />
-            Report
-          </Menu.Item>
-        </React.Fragment>
+        <Menu.Item as={NavLink} to="/users">
+          <Icon name="user circle" />
+          Users
+        </Menu.Item>
       )}
+      <Menu.Item as={NavLink} to="/report/table">
+        <Icon name="chart bar outline" />
+        Report
+      </Menu.Item>
       <Menu.Item as={NavLink} to="/logout">
         <Icon name="sign-out" />
         Sign out

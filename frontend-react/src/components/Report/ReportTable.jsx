@@ -6,6 +6,8 @@ const ReportTable = ({ projects }) => {
 
   const { allProjects } = projects.data
 
+  const totalCost = Math.floor(allProjects.reduce((a, c) => (a += c.cost), 0) * 100) / 100
+
   return (
     <Table>
       <Table.Header>
@@ -30,7 +32,7 @@ const ReportTable = ({ projects }) => {
         <Table.Row style={{ fontWeight: 'Bold' }}>
           <Table.Cell>Total</Table.Cell>
           <Table.Cell>{allProjects.reduce((a, c) => (a += c.hours), 0)} h</Table.Cell>
-          <Table.Cell>{allProjects.reduce((a, c) => (a += c.cost), 0)} €</Table.Cell>
+          <Table.Cell>{totalCost} €</Table.Cell>
         </Table.Row>
       </Table.Footer>
     </Table>

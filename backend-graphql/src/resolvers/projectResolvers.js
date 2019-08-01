@@ -56,6 +56,13 @@ const projectResolvers = {
       }, 0)
 
       return Math.floor(cost * 100) / 100
+    },
+    hourlogs: async (root, args, { dataSources }) => {
+      return dataSources.hourlogDatabase.getHourlogsByProjectRoot({
+        root,
+        dateTo: args.dateTo,
+        dateFrom: args.dateFrom
+      })
     }
   }
 }
