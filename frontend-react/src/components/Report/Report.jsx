@@ -46,10 +46,15 @@ const Report = ({ match }) => {
       />
       <Switch>
         <Route path="/report/table" render={() => <ReportTable projects={projects} />} />
-        <Route path="/report/chart" render={() => <ReportChart projects={projects} />} />
+        <Route
+          path="/report/chart"
+          render={() => <ReportChart dateFrom={dateFrom} dateTo={dateTo} projects={projects} />}
+        />
         <Route
           path="/report/project/:id"
-          render={({ match }) => <ProjectDashboard id={match.params.id} projects={projects} />}
+          render={({ match }) => (
+            <ProjectDashboard id={match.params.id} dateFrom={dateFrom} dateTo={dateTo} />
+          )}
         />
       </Switch>
     </div>

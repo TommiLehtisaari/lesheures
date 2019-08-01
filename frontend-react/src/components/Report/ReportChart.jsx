@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import { Grid, Segment, Container } from 'semantic-ui-react'
-import { Pie, Bar } from 'react-chartjs-2'
+import { Pie } from 'react-chartjs-2'
 import { getRandomColor } from '../../utils/labelsFormatter'
+import TimelineBar from './TimelineBar'
 
 const ReportChart = props => {
-  const { projects } = props
+  const { projects, dateFrom, dateTo } = props
   const [redirect, setRedirect] = useState(undefined)
   // Placeholders are important for stable rendering
   const allProjects = projects.data.allProjects || [
@@ -22,7 +23,7 @@ const ReportChart = props => {
   })
 
   const handlePieClick = e => {
-    setRedirect(allProjects[e[0]._index].id)
+    if (e[0]) setRedirect(allProjects[e[0]._index].id)
   }
 
   const hourData = {
@@ -52,19 +53,19 @@ const ReportChart = props => {
   return (
     <Container>
       <Grid>
-        <Grid.Column width="8">
+        <Grid.Column width="9">
           <Segment>
             <Pie
               data={hourData}
               onElementsClick={e => handlePieClick(e)}
               options={{
-                legend: { display: false },
+                legend: { position: 'left' },
                 title: { display: true, text: 'Hours used by Project' }
               }}
             />
           </Segment>
         </Grid.Column>
-        <Grid.Column width="8">
+        <Grid.Column width="7">
           <Segment>
             <Pie
               data={costData}
@@ -80,14 +81,7 @@ const ReportChart = props => {
       <Grid>
         <Grid.Column width="16">
           <Segment>
-            <Bar
-              data={hourData}
-              onElementsClick={e => handlePieClick(e)}
-              options={{
-                legend: { display: false },
-                title: { display: true, text: 'Hours used by Project' }
-              }}
-            />
+            <TimelineBar dateFrom={dateFrom} dateTo={dateTo} />
           </Segment>
         </Grid.Column>
       </Grid>
