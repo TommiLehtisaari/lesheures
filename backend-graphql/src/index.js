@@ -1,6 +1,5 @@
 const { ApolloServer } = require('apollo-server-express')
 const express = require('express')
-const cors = require('cors')
 const path = require('path')
 const config = require('config')
 
@@ -45,12 +44,11 @@ const server = new ApolloServer({
 
 const app = express()
 
-//app.use(cors)
 app.use(express.static(path.join(__dirname, '../build')))
 
 // Deploy react app
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'))
+  res.sendFile(path.join(__dirname, '../build', 'index.html'))
 })
 
 server.applyMiddleware({ app })

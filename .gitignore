@@ -1,2 +1,4 @@
 node_modules/
 .DS_Store
+/backend-graphql/build/
+/frontend-react/build/

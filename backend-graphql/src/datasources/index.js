@@ -5,7 +5,7 @@ const logger = require('../utils/logger')
 const UserMongo = require('./userMongo')
 const ProjectMongo = require('./projectMongo')
 const TaskMongo = require('./taskMongo')
-const HourlogMongo = require('./HourlogMongo')
+const HourlogMongo = require('./hourlogMongo')
 
 mongoose.set('useFindAndModify', false)
 const env = process.env.NODE_ENV
@@ -14,10 +14,10 @@ const databaseDefiner = env => {
   switch (env) {
     case 'test':
       return config.get('db').toString()
-    case 'production':
-      return config.get('atlas_uri').toString()
-    default:
+    case 'development':
       return config.get('db').toString()
+    default:
+      return config.get('atlas_uri').toString()
   }
 }
 
