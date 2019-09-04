@@ -1,11 +1,16 @@
 {
   "name": "backend-graphql",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "./src/index.js",
+  "engines": {
+    "node": "12.x"
+  },
   "license": "MIT",
   "scripts": {
-    "watch": "nodemon ./src/index.js",
-    "test": "NODE_ENV=test jest --verbose --runInBand"
+    "start": "NODE_ENV=production node ./src/index.js",
+    "watch": "NODE_ENV=development nodemon ./src/index.js",
+    "test": "NODE_ENV=test jest --verbose --runInBand",
+    "build:ui": "rm -rf build && cd ../frontend-react/ && yarn build && cp -r build ../backend-graphql"
   },
   "jest": {
     "testEnvironment": "node",
@@ -14,8 +19,11 @@
   "dependencies": {
     "apollo-datasource": "^0.5.0",
     "apollo-server": "^2.6.3",
+    "apollo-server-express": "^2.9.3",
     "bcrypt": "^3.0.6",
     "config": "^3.1.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
     "graphql": "^14.3.1",
     "graphql-tools": "^4.0.4",
     "jsonwebtoken": "^8.5.1",

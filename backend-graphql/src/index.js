@@ -1,6 +1,9 @@
-const { ApolloServer } = require('apollo-server')
-
+const { ApolloServer } = require('apollo-server-express')
+const express = require('express')
+const cors = require('cors')
+const path = require('path')
 const config = require('config')
+
 const jwt = require('jsonwebtoken')
 
 const {
@@ -40,11 +43,28 @@ const server = new ApolloServer({
   context
 })
 
-if (process.env.NODE_ENV !== 'test') {
-  server.listen().then(({ url, subscriptionsUrl }) => {
-    console.log(`Server ready at ${url}`)
-    console.log(`Subscriptions ready at ${subscriptionsUrl}`)
-    console.log(`mode: ${config.get('mode')}`)
+const app = express()
+
+//app.use(cors)
+app.use(express.static(path.join(__dirname, '../build')))
+
+// Deploy react app
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'))
+})
+
+server.applyMiddleware({ app })
+const PORT = process.env.PORT || 4000
+const environment = process.env.NODE_ENV
+
+if (environment !== 'test') {
+  app.listen(PORT, () => {
+    if (environment === 'development') {
+      console.log(
+        `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
+      )
+      console.log(`mode: ${config.get('mode')}`)
+    }
   })
 }
 
